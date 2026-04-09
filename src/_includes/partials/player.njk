@@ -1,0 +1,41 @@
+<figure class="player" data-player>
+  <div class="player__art">
+    <img
+      src="{{ episode.coverImage or site.coverImage }}"
+      alt="{{ episode.title }} cover artwork"
+      width="500" height="500" loading="lazy">
+  </div>
+  <div class="player__body">
+    <audio
+      data-player-audio
+      preload="metadata"
+      src="{{ episode.audio }}"
+      {% if episode.durationSeconds %}data-duration="{{ episode.durationSeconds }}"{% endif %}>
+      Your browser does not support the audio element.
+      <a href="{{ episode.audio }}">Download the MP3</a>.
+    </audio>
+
+    <div class="player__controls">
+      <button type="button" class="player__btn player__btn--skip" data-player-skip="-15" aria-label="Skip back 15 seconds">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5V2L6 6l5 4V7a5 5 0 1 1-5 5H4a7 7 0 1 0 7-7Z" fill="currentColor"/><text x="12" y="16" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor">15</text></svg>
+      </button>
+      <button type="button" class="player__btn player__btn--play" data-player-toggle aria-label="Play episode">
+        <svg class="player__icon player__icon--play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        <svg class="player__icon player__icon--pause" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor"/></svg>
+      </button>
+      <button type="button" class="player__btn player__btn--skip" data-player-skip="15" aria-label="Skip forward 15 seconds">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5V2l5 4-5 4V7a5 5 0 1 0 5 5h2a7 7 0 1 1-7-7Z" fill="currentColor"/><text x="12" y="16" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor">15</text></svg>
+      </button>
+      <div class="player__time">
+        <span data-player-current>00:00</span>
+        <span class="player__sep">/</span>
+        <span data-player-total>{% if episode.durationSeconds %}{{ episode.durationSeconds | hms }}{% else %}--:--{% endif %}</span>
+      </div>
+      <button type="button" class="player__btn player__btn--rate" data-player-rate aria-label="Playback speed">1x</button>
+    </div>
+
+    <div class="player__scrub">
+      <input type="range" min="0" max="1000" value="0" step="1" data-player-scrub aria-label="Scrub through episode">
+    </div>
+  </div>
+</figure>

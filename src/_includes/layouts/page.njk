@@ -1,0 +1,9 @@
+---
+layout: layouts/base.njk
+---
+<article class="page">
+  {% if title %}<h1 class="page__title">{{ title }}</h1>{% endif %}
+  <div class="prose">
+    {{ content | safe }}
+  </div>
+</article>

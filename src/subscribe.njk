@@ -1,0 +1,24 @@
+---
+layout: layouts/base.njk
+permalink: /subscribe/index.html
+title: Subscribe
+description: Subscribe to Another Thing in your favorite podcast app.
+---
+<section class="subscribe">
+  <header class="subscribe__header">
+    <p class="eyebrow"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> Subscribe</p>
+    <h1 class="subscribe__title">Pick your player</h1>
+    <p class="subscribe__intro">Another Thing is in all the major directories. If your app is not listed, paste the RSS feed URL into it directly.</p>
+  </header>
+
+  <ul class="subscribe__list">
+    {% for s in site.subscribe %}
+      <li>
+        <a class="subscribe__card" href="{{ s.url }}">
+          <span class="subscribe__name">{{ s.name }}</span>
+          <span class="subscribe__hint">{{ s.url }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if title %}{{ title }} · {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta name="description" content="{{ description or site.shortDescription }}">
+
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }} podcast feed" href="{{ site.url }}/podcast.xml">
+
+    <meta property="og:type" content="{% if ogType %}{{ ogType }}{% else %}website{% endif %}">
+    <meta property="og:site_name" content="{{ site.title }}">
+    <meta property="og:title" content="{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}">
+    <meta property="og:description" content="{{ description or site.shortDescription }}">
+    <meta property="og:image" content="{{ site.url }}{{ ogImage or site.coverImage }}">
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/uploads/2025/another-thing-3000.png">
+
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="preload" href="https://rsms.me/inter/inter.css" as="style">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  </head>
+  <body class="{{ bodyClass }}">
+    {% include "partials/header.njk" %}
+    <main id="main">
+      {{ content | safe }}
+    </main>
+    {% include "partials/footer.njk" %}
+    <script src="/assets/js/player.js" defer></script>
+  </body>
+</html>

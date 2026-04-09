@@ -1,0 +1,12 @@
+---
+layout: layouts/episode.njk
+pagination:
+  data: episodes
+  size: 1
+  alias: episode
+permalink: "{{ episode.permalink }}"
+eleventyComputed:
+  title: "{{ episode.title }}"
+  description: "{{ episode.summary }}"
+  ogImage: "{{ episode.coverImage or site.coverImage }}"
+---

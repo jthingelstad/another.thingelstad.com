@@ -1,0 +1,31 @@
+---
+layout: layouts/base.njk
+permalink: /about/index.html
+title: About
+description: About Another Thing and Jamie Thingelstad.
+---
+<section class="about">
+  <header class="about__header">
+    <p class="eyebrow"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> About</p>
+    <h1 class="about__title">About the show</h1>
+  </header>
+
+  <div class="prose">
+    <p>{{ site.description }}</p>
+
+    <p>This is the third project in a small family. The first is my <a href="https://www.thingelstad.com">blog</a>, which I have been writing for over twenty years. The second is the <a href="https://weekly.thingelstad.com">Weekly Thing</a>, a newsletter I have been publishing since 2017. Another Thing is the audio counterpart, and the format I am still figuring out.</p>
+
+    <h2>About Jamie</h2>
+    <p>Jamie Thingelstad is the host. He works in technology and has spent a long time writing on the web.</p>
+
+    <h2>How often do new episodes come out?</h2>
+    <p>There is no fixed schedule. New episodes show up when they show up. The best way to never miss one is to <a href="/subscribe/">subscribe</a>.</p>
+
+    <h2>The family</h2>
+    <ul>
+      {% for f in site.family %}
+        <li><a href="{{ f.url }}"><strong>{{ f.name }}</strong></a>: {{ f.description }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

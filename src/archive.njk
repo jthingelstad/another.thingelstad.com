@@ -1,0 +1,52 @@
+---
+layout: layouts/base.njk
+permalink: /archive/index.html
+title: Episodes
+description: Every episode of Another Thing.
+---
+<section class="archive">
+  <header class="archive__header">
+    <p class="eyebrow"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> Archive</p>
+    <h1 class="archive__title">Every episode</h1>
+    <p class="archive__intro">{{ episodes.length }} episode{% if episodes.length != 1 %}s{% endif %} so far.</p>
+  </header>
+
+  <div class="archive__search" id="search">
+    <input type="search" id="pagefind-input" placeholder="Search episodes and transcripts" autocomplete="off">
+    <div id="pagefind-results"></div>
+  </div>
+
+  <ol class="archive__list">
+    {% for episode in episodes %}
+      <li class="archive__item" data-pagefind-body>
+        <a href="{{ episode.permalink }}">
+          <span class="archive__number">#{{ episode.number }}</span>
+          <div class="archive__body">
+            <h2 class="archive__episode-title">{{ episode.title }}</h2>
+            {% if episode.summary %}<p class="archive__summary">{{ episode.summary }}</p>{% endif %}
+            <p class="archive__meta">
+              {{ episode.publishDate | readableDate }}
+              {% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}
+              {% if episode.transcriptPermalink %} · transcript{% endif %}
+            </p>
+          </div>
+        </a>
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (typeof PagefindUI !== "undefined") {
+      new PagefindUI({
+        element: "#search",
+        showSubResults: true,
+        resetStyles: false,
+        showImages: false,
+      });
+    }
+  });
+</script>

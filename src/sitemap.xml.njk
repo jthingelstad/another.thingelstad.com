@@ -1,0 +1,23 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>{{ site.url }}/</loc></url>
+  <url><loc>{{ site.url }}/archive/</loc></url>
+  <url><loc>{{ site.url }}/about/</loc></url>
+  <url><loc>{{ site.url }}/subscribe/</loc></url>
+  {% for episode in episodes %}
+  <url>
+    <loc>{{ site.url }}{{ episode.permalink }}</loc>
+    <lastmod>{{ episode.publishDate | isoDate }}</lastmod>
+  </url>
+  {% if episode.transcriptPermalink %}
+  <url>
+    <loc>{{ site.url }}{{ episode.transcriptPermalink }}</loc>
+    <lastmod>{{ episode.publishDate | isoDate }}</lastmod>
+  </url>
+  {% endif %}
+  {% endfor %}
+</urlset>

@@ -1,0 +1,71 @@
+---
+layout: layouts/base.njk
+permalink: /index.html
+eleventyComputed:
+  episode: "{{ episodes[0] }}"
+---
+<section class="hero">
+  <div class="hero__inner">
+    <div class="hero__art">
+      <img src="{{ site.coverImage }}" alt="Another Thing podcast artwork" width="600" height="600">
+    </div>
+    <div class="hero__copy">
+      <p class="hero__eyebrow"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> A podcast</p>
+      <h1 class="hero__title">{{ site.title }}</h1>
+      <p class="hero__tagline">{{ site.shortDescription }}</p>
+      <div class="hero__actions">
+        <a class="button button--primary" href="{{ episodes[0].permalink }}">Listen to the latest episode</a>
+        <a class="button" href="/subscribe/">Subscribe</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="latest">
+  <div class="latest__header">
+    <h2 class="section-title">Latest episode</h2>
+    <a href="/archive/" class="section-link">All episodes →</a>
+  </div>
+
+  {% set episode = episodes[0] %}
+  <article class="latest__card">
+    <header>
+      <p class="card__eyebrow">Episode {{ episode.number }} · {{ episode.publishDate | readableDate }}{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}</p>
+      <h3 class="card__title"><a href="{{ episode.permalink }}">{{ episode.title }}</a></h3>
+      <p class="card__summary">{{ episode.summary }}</p>
+    </header>
+    {% include "partials/player.njk" %}
+  </article>
+</section>
+
+{% if episodes.length > 1 %}
+<section class="more">
+  <h2 class="section-title">Recent episodes</h2>
+  <ul class="episode-list">
+    {% for episode in episodes.slice(1, 6) %}
+      <li class="episode-list__item">
+        <a class="episode-list__link" href="{{ episode.permalink }}">
+          <span class="episode-list__number">#{{ episode.number }}</span>
+          <span class="episode-list__title">{{ episode.title }}</span>
+          <span class="episode-list__meta">{{ episode.publishDate | readableDate("LLL d, yyyy") }}{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<section class="family">
+  <h2 class="section-title">Part of a small family of sites</h2>
+  <p class="family__intro">Another Thing joins two other long-running projects.</p>
+  <ul class="family__list">
+    {% for f in site.family %}
+      <li>
+        <a href="{{ f.url }}">
+          <strong>{{ f.name }}</strong>
+          <span>{{ f.description }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

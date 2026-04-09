@@ -1,0 +1,29 @@
+---
+layout: layouts/base.njk
+ogType: article
+---
+<article class="episode" data-pagefind-body>
+  <header class="episode__header">
+    <p class="episode__eyebrow">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      Episode {{ episode.number }} · {{ episode.publishDate | readableDate }}{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}
+    </p>
+    <h1 class="episode__title">{{ episode.title }}</h1>
+    {% if episode.summary %}<p class="episode__summary">{{ episode.summary }}</p>{% endif %}
+  </header>
+
+  {% include "partials/player.njk" %}
+
+  {% if episode.notesMarkdown %}
+    <section class="episode__notes prose">
+      {{ episode.notesMarkdown | renderMarkdown | safe }}
+    </section>
+  {% endif %}
+
+  <aside class="episode__aside">
+    {% if episode.transcriptPermalink %}
+      <a class="link-button" href="{{ episode.transcriptPermalink }}">Read the transcript</a>
+    {% endif %}
+    <a class="link-button" href="/subscribe/">Subscribe</a>
+  </aside>
+</article>

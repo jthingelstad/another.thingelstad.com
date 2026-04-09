@@ -1,0 +1,19 @@
+{
+  "name": "another-thingelstad-com",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Another Thing podcast website, built with Eleventy",
+  "scripts": {
+    "build": "eleventy && pagefind --site _site",
+    "serve": "eleventy --serve",
+    "clean": "rm -rf _site"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "luxon": "^3.5.0",
+    "markdown-it": "^14.1.0",
+    "music-metadata": "^10.7.0",
+    "pagefind": "^1.1.1"
+  }
+}

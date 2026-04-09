@@ -1,0 +1,34 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__about">
+      <p class="site-footer__title">{{ site.title }}</p>
+      <p class="site-footer__tagline">{{ site.tagline }}</p>
+    </div>
+
+    <div class="site-footer__col">
+      <h2>Listen</h2>
+      <ul>
+        {% for s in site.subscribe %}
+          <li><a href="{{ s.url }}">{{ s.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="site-footer__col">
+      <h2>The family</h2>
+      <ul>
+        {% for f in site.family %}
+          <li>
+            <a href="{{ f.url }}">{{ f.name }}</a>
+            <span class="site-footer__hint">{{ f.label }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="site-footer__legal">
+    <p>{{ site.copyright }}</p>
+    <p><a href="/podcast.xml">RSS feed</a></p>
+  </div>
+</footer>

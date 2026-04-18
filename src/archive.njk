@@ -11,8 +11,6 @@ description: Every episode of Another Thing.
     <p class="archive__intro">{{ episodes.length }} episode{% if episodes.length != 1 %}s{% endif %} so far.</p>
   </header>
 
-  <div class="archive__search" id="search"></div>
-
   <ol class="archive__list">
     {% for episode in episodes %}
       <li class="archive__item" data-pagefind-body>
@@ -33,18 +31,3 @@ description: Every episode of Another Thing.
   </ol>
 </section>
 
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
-<script src="/pagefind/pagefind-ui.js"></script>
-<script>
-  window.addEventListener("DOMContentLoaded", () => {
-    if (typeof PagefindUI !== "undefined") {
-      new PagefindUI({
-        element: "#search",
-        showSubResults: true,
-        resetStyles: false,
-        showImages: false,
-        placeholder: "Search episodes and transcripts",
-      });
-    }
-  });
-</script>

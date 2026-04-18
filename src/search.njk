@@ -1,0 +1,32 @@
+---
+layout: layouts/base.njk
+permalink: /search/index.html
+title: Search
+description: Search every episode and transcript of Another Thing.
+---
+<section class="search-page">
+  <header class="search-page__header">
+    <p class="eyebrow"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> Search</p>
+    <h1 class="search-page__title">Search the show</h1>
+    <p class="search-page__intro">Full-text search across every episode page and transcript.</p>
+  </header>
+
+  <div class="search-page__box" id="search"></div>
+</section>
+
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (typeof PagefindUI !== "undefined") {
+      new PagefindUI({
+        element: "#search",
+        showSubResults: true,
+        resetStyles: false,
+        showImages: false,
+        placeholder: "Search episodes and transcripts",
+        autofocus: true,
+      });
+    }
+  });
+</script>

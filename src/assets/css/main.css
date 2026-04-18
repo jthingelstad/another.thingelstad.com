@@ -586,8 +586,16 @@ main > section.hero { max-width: none; }
 }
 .archive__intro { color: var(--text-soft); margin-bottom: var(--space-6); }
 
-.archive__search {
-  margin-bottom: var(--space-7);
+/* ----- Search ----------------------------------------------------------- */
+
+.search-page__title {
+  font-style: italic;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  margin-bottom: var(--space-3);
+}
+.search-page__intro { color: var(--text-soft); margin-bottom: var(--space-6); }
+
+.search-page__box {
   --pagefind-ui-scale: 1;
   --pagefind-ui-font: var(--font-sans);
   --pagefind-ui-primary: var(--accent);
@@ -600,17 +608,17 @@ main > section.hero { max-width: none; }
   --pagefind-ui-image-border-radius: var(--radius-sm);
   --pagefind-ui-image-box-ratio: 1 / 1;
 }
-.archive__search .pagefind-ui__search-input {
+.search-page__box .pagefind-ui__search-input {
   font: inherit;
   padding: 0.85rem 1rem;
 }
-.archive__search .pagefind-ui__result-title a {
+.search-page__box .pagefind-ui__result-title a {
   color: var(--text);
 }
-.archive__search .pagefind-ui__result-title a:hover {
+.search-page__box .pagefind-ui__result-title a:hover {
   color: var(--accent);
 }
-.archive__search .pagefind-ui__result-excerpt mark {
+.search-page__box .pagefind-ui__result-excerpt mark {
   background: color-mix(in srgb, var(--accent) 18%, transparent);
   color: inherit;
   padding: 0 0.15em;

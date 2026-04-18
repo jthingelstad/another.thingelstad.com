@@ -1,0 +1,31 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+# {{ site.title }}
+
+> {{ site.description }}
+
+Hosted by {{ site.author.name }}. Each episode below has a companion `.txt` URL containing that episode's metadata, show notes, and full transcript in plain markdown — fetch those directly to ingest a single episode. A structured catalog of every episode is also available at {{ site.url }}/index.json.
+
+## Episodes (LLM-friendly text)
+
+{% for episode in episodes -%}
+- [Episode {{ episode.number }}: {{ episode.title }}]({{ site.url }}{{ episode.llmPermalink }}): {{ episode.summary }}
+{% endfor %}
+## Episode pages (HTML)
+
+{% for episode in episodes -%}
+- [Episode {{ episode.number }}: {{ episode.title }}]({{ site.url }}{{ episode.permalink }})
+{% endfor %}
+## Feeds and pages
+
+- [About the show]({{ site.url }}/about/)
+- [Subscribe]({{ site.url }}/subscribe/)
+- [RSS feed]({{ site.url }}/podcast.xml)
+- [JSON index]({{ site.url }}/index.json)
+- [Sitemap]({{ site.url }}/sitemap.xml)
+
+## Optional
+
+- [Episode archive]({{ site.url }}/archive/): browse and search every episode

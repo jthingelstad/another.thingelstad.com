@@ -8,6 +8,9 @@
 
     <link rel="canonical" href="{{ site.url }}{{ page.url }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }} podcast feed" href="{{ site.url }}/podcast.xml">
+    <link rel="alternate" type="text/markdown" title="LLM-friendly site index" href="{{ site.url }}/llms.txt">
+    <link rel="alternate" type="application/json" title="JSON episode index" href="{{ site.url }}/index.json">
+    {% if episode.llmPermalink %}<link rel="alternate" type="text/markdown" title="Plain-text version of this episode" href="{{ site.url }}{{ episode.llmPermalink }}">{% endif %}
 
     <meta property="og:type" content="{% if ogType %}{{ ogType }}{% else %}website{% endif %}">
     <meta property="og:site_name" content="{{ site.title }}">

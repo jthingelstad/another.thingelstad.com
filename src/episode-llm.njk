@@ -1,0 +1,29 @@
+---
+pagination:
+  data: episodes
+  size: 1
+  alias: episode
+permalink: "{{ episode.llmPermalink }}"
+eleventyExcludeFromCollections: true
+---
+# {{ episode.title }}
+
+- Episode: {{ episode.number }}
+- URL: {{ site.url }}{{ episode.permalink }}
+- Date: {{ episode.publishDate | readableDate }}{% if episode.durationSeconds %}
+- Duration: {{ episode.durationSeconds | friendlyDuration }}{% endif %}{% if episode.audio %}
+- Audio: {{ site.url }}{{ episode.audio }}{% endif %}{% if episode.transcriptPermalink %}
+- Transcript page: {{ site.url }}{{ episode.transcriptPermalink }}{% endif %}
+
+## Summary
+
+{{ episode.summary }}
+
+## Show notes
+
+{{ episode.notesMarkdown | safe }}
+{% if episode.transcriptText %}
+## Transcript
+
+{{ episode.transcriptText | safe }}
+{% endif %}

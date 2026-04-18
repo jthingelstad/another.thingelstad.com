@@ -51,7 +51,15 @@
       else audio.pause();
     });
 
-    audio.addEventListener("play", () => setPlaying(true));
+    const trackBtn = root.querySelector("[data-player-track]");
+    let trackedPlay = false;
+    audio.addEventListener("play", () => {
+      setPlaying(true);
+      if (!trackedPlay && trackBtn) {
+        trackBtn.click();
+        trackedPlay = true;
+      }
+    });
     audio.addEventListener("pause", () => setPlaying(false));
     audio.addEventListener("ended", () => setPlaying(false));
 

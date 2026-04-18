@@ -12,8 +12,7 @@ eleventyExcludeFromCollections: true
 - URL: {{ site.url }}{{ episode.permalink }}
 - Date: {{ episode.publishDate | readableDate }}{% if episode.durationSeconds %}
 - Duration: {{ episode.durationSeconds | friendlyDuration }}{% endif %}{% if episode.audio %}
-- Audio: {{ site.url }}{{ episode.audio }}{% endif %}{% if episode.transcriptPermalink %}
-- Transcript page: {{ site.url }}{{ episode.transcriptPermalink }}{% endif %}
+- Audio: {{ site.url }}{{ episode.audio }}{% endif %}
 
 ## Summary
 

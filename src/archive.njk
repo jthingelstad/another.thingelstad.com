@@ -13,7 +13,7 @@ description: Every episode of Another Thing.
 
   <ol class="archive__list">
     {% for episode in episodes %}
-      <li class="archive__item" data-pagefind-body>
+      <li class="archive__item">
         <a href="{{ episode.permalink }}">
           <span class="archive__number">#{{ episode.number }}</span>
           <div class="archive__body">
@@ -22,7 +22,7 @@ description: Every episode of Another Thing.
             <p class="archive__meta">
               {{ episode.publishDate | readableDate }}
               {% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}
-              {% if episode.transcriptPermalink %} · transcript{% endif %}
+              {% if episode.transcriptText %} · transcript{% endif %}
             </p>
           </div>
         </a>

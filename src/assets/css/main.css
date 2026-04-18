@@ -535,6 +535,23 @@ main > section.hero { max-width: none; }
   padding-top: var(--space-5);
   border-top: 1px solid var(--line);
 }
+.episode__transcript {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+.episode__transcript-title {
+  font-style: italic;
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  margin: 0 0 var(--space-5);
+}
+.episode__transcript-body {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+.episode__transcript-body p {
+  margin-bottom: var(--space-4);
+}
 
 /* ----- Page (about, etc.) ---------------------------------------------- */
 
@@ -542,7 +559,7 @@ main > section.hero { max-width: none; }
 .archive,
 .subscribe,
 .about,
-.transcript,
+.search-page,
 .notfound {
   max-width: var(--container-narrow);
   margin: 0 auto;
@@ -596,8 +613,8 @@ main > section.hero { max-width: none; }
 .search-page__intro { color: var(--text-soft); margin-bottom: var(--space-6); }
 
 .search-page__box {
-  --pagefind-ui-scale: 1;
-  --pagefind-ui-font: var(--font-sans);
+  --pagefind-ui-scale: 0.9;
+  --pagefind-ui-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --pagefind-ui-primary: var(--accent);
   --pagefind-ui-text: var(--text);
   --pagefind-ui-background: var(--bg-card);
@@ -607,22 +624,6 @@ main > section.hero { max-width: none; }
   --pagefind-ui-border-radius: var(--radius);
   --pagefind-ui-image-border-radius: var(--radius-sm);
   --pagefind-ui-image-box-ratio: 1 / 1;
-}
-.search-page__box .pagefind-ui__search-input {
-  font: inherit;
-  padding: 0.85rem 1rem;
-}
-.search-page__box .pagefind-ui__result-title a {
-  color: var(--text);
-}
-.search-page__box .pagefind-ui__result-title a:hover {
-  color: var(--accent);
-}
-.search-page__box .pagefind-ui__result-excerpt mark {
-  background: color-mix(in srgb, var(--accent) 18%, transparent);
-  color: inherit;
-  padding: 0 0.15em;
-  border-radius: 3px;
 }
 
 .archive__list {
@@ -669,8 +670,7 @@ main > section.hero { max-width: none; }
 /* ----- Subscribe page --------------------------------------------------- */
 
 .subscribe__title,
-.about__title,
-.transcript__title {
+.about__title {
   font-style: italic;
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   margin-bottom: var(--space-3);
@@ -711,25 +711,6 @@ main > section.hero { max-width: none; }
   color: var(--text-mute);
   font-size: 0.8rem;
   word-break: break-all;
-}
-
-/* ----- Transcript page -------------------------------------------------- */
-
-.transcript__meta {
-  color: var(--text-mute);
-  margin-bottom: var(--space-6);
-}
-.transcript__body {
-  font-size: 1.05rem;
-  line-height: 1.8;
-}
-.transcript__body p {
-  margin-bottom: var(--space-4);
-}
-.transcript__footer {
-  margin-top: var(--space-7);
-  padding-top: var(--space-5);
-  border-top: 1px solid var(--line);
 }
 
 /* ----- 404 -------------------------------------------------------------- */

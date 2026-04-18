@@ -21,10 +21,22 @@ ogType: article
   {% endif %}
 
   <aside class="episode__aside">
-    {% if episode.transcriptPermalink %}
-      <a class="link-button" href="{{ episode.transcriptPermalink }}">Read the transcript</a>
+    {% if episode.transcriptText %}
+      <a class="link-button" href="#transcript">Jump to transcript</a>
     {% endif %}
     <a class="link-button" href="/subscribe/">Subscribe</a>
     <button type="button" class="tinylytics_kudos" aria-label="Send kudos for this episode"></button>
   </aside>
+
+  {% if episode.transcriptText %}
+    <section id="transcript" class="episode__transcript">
+      <header class="episode__transcript-header">
+        <p class="eyebrow"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> Transcript</p>
+        <h2 class="episode__transcript-title">Transcript</h2>
+      </header>
+      <div class="prose episode__transcript-body">
+        {{ episode.transcriptText | paragraphs | safe }}
+      </div>
+    </section>
+  {% endif %}
 </article>

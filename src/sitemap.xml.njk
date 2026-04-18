@@ -13,11 +13,5 @@ eleventyExcludeFromCollections: true
     <loc>{{ site.url }}{{ episode.permalink }}</loc>
     <lastmod>{{ episode.publishDate | isoDate }}</lastmod>
   </url>
-  {% if episode.transcriptPermalink %}
-  <url>
-    <loc>{{ site.url }}{{ episode.transcriptPermalink }}</loc>
-    <lastmod>{{ episode.publishDate | isoDate }}</lastmod>
-  </url>
-  {% endif %}
   {% endfor %}
 </urlset>

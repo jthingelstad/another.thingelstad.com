@@ -11,10 +11,7 @@ description: Every episode of Another Thing.
     <p class="archive__intro">{{ episodes.length }} episode{% if episodes.length != 1 %}s{% endif %} so far.</p>
   </header>
 
-  <div class="archive__search" id="search">
-    <input type="search" id="pagefind-input" placeholder="Search episodes and transcripts" autocomplete="off">
-    <div id="pagefind-results"></div>
-  </div>
+  <div class="archive__search" id="search"></div>
 
   <ol class="archive__list">
     {% for episode in episodes %}
@@ -46,6 +43,7 @@ description: Every episode of Another Thing.
         showSubResults: true,
         resetStyles: false,
         showImages: false,
+        placeholder: "Search episodes and transcripts",
       });
     }
   });

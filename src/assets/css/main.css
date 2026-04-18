@@ -588,15 +588,33 @@ main > section.hero { max-width: none; }
 
 .archive__search {
   margin-bottom: var(--space-7);
+  --pagefind-ui-scale: 1;
+  --pagefind-ui-font: var(--font-sans);
+  --pagefind-ui-primary: var(--accent);
+  --pagefind-ui-text: var(--text);
+  --pagefind-ui-background: var(--bg-card);
+  --pagefind-ui-border: var(--line);
+  --pagefind-ui-tag: var(--bg-alt);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: var(--radius);
+  --pagefind-ui-image-border-radius: var(--radius-sm);
+  --pagefind-ui-image-box-ratio: 1 / 1;
 }
-.archive__search input[type="search"] {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: var(--bg-card);
-  color: var(--text);
+.archive__search .pagefind-ui__search-input {
   font: inherit;
+  padding: 0.85rem 1rem;
+}
+.archive__search .pagefind-ui__result-title a {
+  color: var(--text);
+}
+.archive__search .pagefind-ui__result-title a:hover {
+  color: var(--accent);
+}
+.archive__search .pagefind-ui__result-excerpt mark {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: inherit;
+  padding: 0 0.15em;
+  border-radius: 3px;
 }
 
 .archive__list {

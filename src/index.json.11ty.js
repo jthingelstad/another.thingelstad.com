@@ -13,7 +13,8 @@ export function render({ episodes, site }) {
       language: site.language,
       coverImage: `${site.url}${site.coverImage}`,
       feeds: {
-        rss: `${site.url}/podcast.xml`,
+        podcast: `${site.url}/podcast.xml`,
+        rss: `${site.url}/feed.xml`,
         json: `${site.url}/index.json`,
       },
       llms: {

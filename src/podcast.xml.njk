@@ -31,6 +31,14 @@ eleventyExcludeFromCollections: true
       <itunes:category text="{{ site.itunes.subcategory | xmlEscape | safe }}" />
     </itunes:category>
 
+    {#
+      podcast:guid is permanent and MUST NOT be regenerated. Once published it
+      identifies this feed across podcast directories (Podcast Index, Apple
+      Podcasts, etc.) even if the feed URL changes.
+    #}
+    <podcast:guid>2A3763A6-C2B5-4C75-A33B-ABA14DAAA1FF</podcast:guid>
+    <podcast:locked owner="jamie@thingelstad.com">no</podcast:locked>
+
     <image>
       <url>{{ site.url }}{{ site.coverImage }}</url>
       <title>{{ site.title | xmlEscape | safe }}</title>
@@ -46,7 +54,7 @@ eleventyExcludeFromCollections: true
       <description>{{ episode.summary | xmlEscape | safe }}</description>
       <content:encoded>{{ episode.notesMarkdown | renderMarkdown | cdata | safe }}</content:encoded>
       {% if episode.audio %}<enclosure url="{{ site.url }}{{ episode.audio }}"{% if episode.audioBytes %} length="{{ episode.audioBytes }}"{% endif %} type="{{ episode.audioMime }}" />{% endif %}
-      {% if episode.durationSeconds %}<itunes:duration>{{ episode.durationSeconds | hms }}</itunes:duration>{% endif %}
+      {% if episode.durationSeconds %}<itunes:duration>{{ episode.durationSeconds | hmsLong }}</itunes:duration>{% endif %}
       <itunes:explicit>{{ episode.explicit }}</itunes:explicit>
       {% if episode.number %}<itunes:episode>{{ episode.number }}</itunes:episode>{% endif %}
       <itunes:episodeType>full</itunes:episodeType>

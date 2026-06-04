@@ -73,4 +73,4 @@ Pagefind indexes elements marked `data-pagefind-body` (archive list items, episo
 
 ## Deploy
 
-GitHub Pages, custom domain via `CNAME` at the repo root (passthrough-copied to `_site/CNAME`). A GitHub Actions workflow is expected at `.github/workflows/` to run `npm ci && npm run build` and publish `_site/` — currently **not present** in this checkout.
+GitHub Pages, custom domain via `CNAME` at the repo root (passthrough-copied to `_site/CNAME`). The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci && npm run build` and publishes `_site/`.

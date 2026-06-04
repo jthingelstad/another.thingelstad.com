@@ -28,6 +28,10 @@ The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Elev
 
 Duration and file size are read from the MP3 automatically at build time. The episode's permalink is computed from the publish date and slug (`/YYYY/MM/DD/slug.html`); the `guid` frontmatter field locks the RSS GUID independently so subscriptions stay valid even if a slug is later edited.
 
+Studio imports these episode markdown/transcript files into its own
+`data/podcast/another-thing/episodes/` store for the Librarian podcast corpus.
+Another remains the publishing surface; Studio owns Thingy's searchable corpus.
+
 ## Local development
 
 ```bash

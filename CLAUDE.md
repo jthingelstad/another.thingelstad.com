@@ -17,6 +17,9 @@ npm run clean       # rm -rf _site
 
 - **`src/`** — Eleventy input. Templates (`*.njk`), layouts (`_includes/layouts/`), partials (`_includes/partials/`), data (`_data/`), assets (`assets/css`, `assets/js`, `assets/images`).
 - **`content/episodes/`** — one `.md` per episode with frontmatter; optional sibling `.txt` transcript.
+- Studio imports `content/episodes/` into `studio-thing/data/podcast/another-thing/episodes/`
+  for the Librarian/Thingy podcast corpus. This repo remains the publishing surface;
+  corpus ownership stays in Studio.
 - **`uploads/YYYY/`** — MP3s and cover art, served at `/uploads/YYYY/` via passthrough.
 - **`lib/loadEpisodes.js`** — reads episodes, extracts MP3 duration + bytes via `music-metadata`, computes permalinks. Called by `src/_data/episodes.js` and `episodesWithTranscripts.js`.
 - **`eleventy.config.js`** — directory config, passthrough copy, and all custom filters.

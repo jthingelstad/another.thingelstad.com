@@ -2,6 +2,28 @@
 
 Eleventy 3 site for **Another Thing**, a podcast by Jamie Thingelstad. Deployed to GitHub Pages via `CNAME` → `another.thingelstad.com`.
 
+## Role in the system
+
+This is the **podcast publish surface** — one of four repos that work together
+(see `studio-thing/ALIGNMENT.md` for the full map). Studio is the brain; the
+surfaces publish or query. Specifically:
+
+- **This repo owns publishing.** Episodes live in `content/episodes/`, audio in
+  `uploads/`, and the site builds the RSS feed (`/podcast.xml`) that
+  directories poll.
+- **Studio (`studio-thing`) owns the corpus.** Its CI imports
+  `content/episodes/` into `studio-thing/data/podcast/another-thing/episodes/`,
+  builds a separate podcast corpus, and uploads it for Thingy
+  (`thingy.thingelstad.com`) to query. The corpus side of any episode is
+  Studio's concern; this repo only ships the episode publicly.
+- **No live dependency.** Unlike Thingy (a live client of Studio's Librarian
+  Lambda), this is a static publishing surface — once the build deploys, the
+  feed and pages are served from GitHub Pages with no runtime tie to Studio.
+
+If an editorial change here affects what Thingy answers about a podcast
+episode, that's Studio's pipeline picking it up on the next corpus build — not
+something this repo coordinates.
+
 ## Commands
 
 ```bash

@@ -34,6 +34,8 @@ Another remains the publishing surface; Studio owns Thingy's searchable corpus.
 
 ## Local development
 
+Use Node 22.
+
 ```bash
 npm install
 npm run serve
@@ -52,6 +54,7 @@ Runs Eleventy, then builds the Pagefind search index over the output in `_site/`
 ## Architecture
 
 - **Eleventy 3** with Nunjucks templates; ESM project (`"type": "module"`).
+- **Node 22** for local builds and GitHub Pages deploys.
 - **Markdown-per-episode**, one file in `content/episodes/`, with auto-derived audio metadata via `music-metadata`. No central JSON database.
 - **Transcripts inline** on each episode page, below the show notes.
 - **Pagefind** client-side search, indexed once per episode and reachable from `/search/`.

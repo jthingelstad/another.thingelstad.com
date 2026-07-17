@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
   "description": "Another Thing podcast website, built with Eleventy",
   "scripts": {
     "build": "eleventy && pagefind --site _site",
@@ -13,7 +16,7 @@
     "@11ty/eleventy": "^3.0.0",
     "luxon": "^3.5.0",
     "markdown-it": "^14.3.0",
-    "music-metadata": "^11.13.0",
+    "music-metadata": "^11.14.0",
     "pagefind": "^1.1.1"
   }
 }

@@ -13,7 +13,7 @@
     "@11ty/eleventy": "^3.0.0",
     "luxon": "^3.5.0",
     "markdown-it": "^14.3.0",
-    "music-metadata": "^11.13.0",
+    "music-metadata": "^11.14.0",
     "pagefind": "^1.1.1"
   }
 }

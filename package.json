@@ -18,5 +18,8 @@
     "markdown-it": "^14.3.0",
     "music-metadata": "^11.14.0",
     "pagefind": "^1.1.1"
+  },
+  "overrides": {
+    "@11ty/recursive-copy": "5.0.2"
   }
 }

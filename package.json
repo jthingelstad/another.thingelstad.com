@@ -20,6 +20,7 @@
     "pagefind": "^1.1.1"
   },
   "overrides": {
-    "@11ty/recursive-copy": "5.0.2"
+    "@11ty/recursive-copy": "5.0.2",
+    "brace-expansion": "5.0.9"
   }
 }

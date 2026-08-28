@@ -10,7 +10,9 @@ This is the **podcast publish surface** — one of the repos that work together
 
 - **This repo owns publishing.** Episodes live in `content/episodes/`, audio in
   `uploads/`, and the site builds the RSS feed (`/podcast.xml`) that
-  directories poll.
+  directories poll. (`at-builder` is scoped to author and commit episodes
+  here in the future; until it ships one, episodes are added by hand per
+  § Adding an episode.)
 - **`librarian-thing` owns the corpus.** Its CI imports
   `content/episodes/` into `librarian-thing/data/podcast/another-thing/episodes/`,
   builds a separate podcast corpus, and uploads it for Thingy

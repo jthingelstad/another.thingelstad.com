@@ -4,24 +4,24 @@ Eleventy 3 site for **Another Thing**, a podcast by Jamie Thingelstad. Deployed 
 
 ## Role in the system
 
-This is the **podcast publish surface** — one of four repos that work together
-(see `studio-thing/ALIGNMENT.md` for the full map). Studio is the brain; the
-surfaces publish or query. Specifically:
+This is the **podcast publish surface** — one of the repos that work together
+(see `librarian-thing/ALIGNMENT.md` for the full map — renamed from
+`studio-thing` 2026-08-28). Specifically:
 
 - **This repo owns publishing.** Episodes live in `content/episodes/`, audio in
   `uploads/`, and the site builds the RSS feed (`/podcast.xml`) that
   directories poll.
-- **Studio (`studio-thing`) owns the corpus.** Its CI imports
-  `content/episodes/` into `studio-thing/data/podcast/another-thing/episodes/`,
+- **`librarian-thing` owns the corpus.** Its CI imports
+  `content/episodes/` into `librarian-thing/data/podcast/another-thing/episodes/`,
   builds a separate podcast corpus, and uploads it for Thingy
   (`thingy.thingelstad.com`) to query. The corpus side of any episode is
-  Studio's concern; this repo only ships the episode publicly.
-- **No live dependency.** Unlike Thingy (a live client of Studio's Librarian
+  the Librarian's concern; this repo only ships the episode publicly.
+- **No live dependency.** Unlike Thingy (a live client of the Librarian
   Lambda), this is a static publishing surface — once the build deploys, the
-  feed and pages are served from GitHub Pages with no runtime tie to Studio.
+  feed and pages are served from GitHub Pages with no runtime tie to the Librarian.
 
 If an editorial change here affects what Thingy answers about a podcast
-episode, that's Studio's pipeline picking it up on the next corpus build — not
+episode, that's the Librarian's pipeline picking it up on the next corpus build — not
 something this repo coordinates.
 
 ## Commands
@@ -39,9 +39,9 @@ npm run clean       # rm -rf _site
 
 - **`src/`** — Eleventy input. Templates (`*.njk`), layouts (`_includes/layouts/`), partials (`_includes/partials/`), data (`_data/`), assets (`assets/css`, `assets/js`, `assets/images`).
 - **`content/episodes/`** — one `.md` per episode with frontmatter; optional sibling `.txt` transcript.
-- Studio imports `content/episodes/` into `studio-thing/data/podcast/another-thing/episodes/`
+- `librarian-thing` imports `content/episodes/` into its `data/podcast/another-thing/episodes/`
   for the Librarian/Thingy podcast corpus. This repo remains the publishing surface;
-  corpus ownership stays in Studio.
+  corpus ownership stays with the Librarian.
 - **`uploads/YYYY/`** — MP3s and cover art, served at `/uploads/YYYY/` via passthrough.
 - **`lib/loadEpisodes.js`** — reads episodes, extracts MP3 duration + bytes via `music-metadata`, computes permalinks. Called by `src/_data/episodes.js` and `episodesWithTranscripts.js`.
 - **`eleventy.config.js`** — directory config, passthrough copy, and all custom filters.

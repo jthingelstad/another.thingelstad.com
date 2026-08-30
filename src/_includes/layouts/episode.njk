@@ -24,6 +24,7 @@ ogType: article
     {% if episode.transcriptText %}
       <a class="link-button" href="#transcript">Jump to transcript</a>
     {% endif %}
+    <a class="link-button" href="https://thingy.thingelstad.com/chat/?explore={{ (site.url + episode.permalink) | urlencode }}" data-tinylytics-event="episode.explore" data-tinylytics-event-value="{{ episode.number }}">&#10024; Explore with Thingy</a>
     <a class="link-button" href="/subscribe/">Subscribe</a>
     <button type="button" class="tinylytics_kudos" aria-label="Send kudos for this episode"></button>
   </aside>

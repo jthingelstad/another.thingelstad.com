@@ -10,13 +10,14 @@
   "scripts": {
     "build": "eleventy && pagefind --site _site",
     "serve": "eleventy --serve",
-    "clean": "rm -rf _site"
+    "clean": "rm -rf _site",
+    "test": "node --test"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
     "luxon": "^3.5.0",
-    "markdown-it": "^14.3.0",
-    "music-metadata": "^11.14.0",
+    "markdown-it": "^14.3.1",
+    "music-metadata": "^11.15.0",
     "pagefind": "^1.1.1"
   },
   "overrides": {

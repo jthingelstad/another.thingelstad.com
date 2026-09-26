@@ -13,6 +13,8 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+.env.*
+!.env.example
 
 # Editor / OS
 .DS_Store

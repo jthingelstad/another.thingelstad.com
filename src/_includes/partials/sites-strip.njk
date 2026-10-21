@@ -4,7 +4,9 @@
     src/_data/sites.json (npm run sites:sync). Every site, the current one
     (site.id) included, reads as its strip_label, so the strip says the same
     on every site; the current site differs only in its class and
-    aria-current. -#}
+    aria-current. Every link carries ?ref=sites-strip-<this site> so
+    Tinylytics' Sources report on the destination shows the visits this
+    strip sent. -#}
 <nav class="sites-strip" aria-label="Jamie's sites">
   <div class="sites-strip__inner">
     <span class="sites-strip__label">Jamie's sites</span>
@@ -12,7 +14,7 @@
       {%- for s in sites.sites %}{% if s.in_sites_strip %}
       {%- set current = s.id == site.id %}
       <li class="sites-strip__item sites-strip__item--{{ s.id | escape }}{% if current %} sites-strip__item--current{% endif %}">
-        <a href="{{ s.url | escape }}" title="{{ s.description | escape }}"{% if current %} aria-current="true"{% endif %}>{{ s.strip_label | escape }}</a>
+        <a href="{{ s.url | escape }}?ref=sites-strip-{{ site.id | escape }}" title="{{ s.description | escape }}"{% if current %} aria-current="true"{% endif %}>{{ s.strip_label | escape }}</a>
       </li>
       {%- endif %}{% endfor %}
     </ul>

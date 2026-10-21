@@ -57,14 +57,14 @@ test("the strip links the in_sites_strip sites in file order and marks Another T
     const items = itemsOf(stripOf(page.content));
     assert.deepEqual(
       items.map((item) => item.href),
-      stripSites.map((site) => site.url),
+      stripSites.map((site) => `${site.url}?ref=sites-strip-another`),
       `${page.url}: strip links`,
     );
     assert.ok(!items.some((item) => item.classes.includes("sites-strip__item--escape")), "Escaping Things is not in the strip");
 
     const current = items.filter((item) => item.current);
     assert.equal(current.length, 1, `${page.url}: exactly one current site`);
-    assert.equal(current[0].href, "https://another.thingelstad.com/");
+    assert.equal(current[0].href, "https://another.thingelstad.com/?ref=sites-strip-another");
     assert.equal(current[0].text, "Another Thing", "this site reads as it does on every other site");
     assert.ok(current[0].classes.includes("sites-strip__item--another"));
     assert.ok(current[0].classes.includes("sites-strip__item--current"));

@@ -1,4 +1,6 @@
 export default {
+  // This site's id in sites.json; the sites strip marks it as the current site.
+  id: "another",
   title: "Another Thing",
   tagline: "A podcast by Jamie Thingelstad",
   description:

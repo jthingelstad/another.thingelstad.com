@@ -32,6 +32,9 @@ something this repo coordinates.
 npm install         # install deps
 npm run serve       # dev server with live reload
 npm run build       # eleventy build + pagefind search index
+npm test            # node --test (docs, sites strip, vendored sites.json)
+npm run sites:sync  # vendor ../shared/sites.json into src/_data/sites.json
+npm run sites:check # fail if the vendored sites.json is stale
 npm run clean       # rm -rf _site
 ```
 
@@ -46,6 +49,7 @@ npm run clean       # rm -rf _site
   corpus ownership stays with the Librarian.
 - **`uploads/YYYY/`** — MP3s and cover art, served at `/uploads/YYYY/` via passthrough.
 - **`lib/loadEpisodes.js`** — reads episodes, extracts MP3 duration + bytes via `music-metadata`, computes permalinks. Called by `src/_data/episodes.js` and `episodesWithTranscripts.js`.
+- **`src/_data/sites.json`** — vendored copy of `thingelstad.com/shared/sites.json`, the canonical list of Jamie's sites. Never edit it here: edit the shared file, then `npm run sites:sync` (`scripts/sync-sites.mjs`). `src/_data/site.js` `id` (`another`) is this site's id in it.
 - **`eleventy.config.js`** — directory config, passthrough copy, and all custom filters.
 - **`_site/`** — build output, git-ignored.
 
@@ -94,10 +98,33 @@ This site replaced a previous micro.blog deployment at the same domain. The foll
 
 The permalink shape is computed in `lib/loadEpisodes.js:38` (`computePermalink`). Frontmatter `guid` locks the RSS GUID independently so existing subscriptions stay valid even if a slug is later edited. Don't change the permalink structure or the GUID scheme without understanding the downstream impact on every subscriber's client.
 
+## Jamie's sites strip
+
+Every page on the base layout opens with the "Jamie's sites" strip
+(`src/_includes/partials/sites-strip.njk`, included first in `<body>` by
+`layouts/base.njk`, above the site header). It is the same strip as on the blog,
+Weekly Thing, Thingy and Things I've built, so its markup, class names, colours
+and sizes are the shared contract in `thingelstad.com/AGENTS.md` ("The sites
+strip"), not this site's palette; only the inner width and side padding follow
+this site's header frame. Styles: the "Jamie's sites strip" block in
+`src/assets/css/main.css` (dark values under `prefers-color-scheme: dark`, as for
+the rest of the site).
+
+It renders at build time from `src/_data/sites.json`: sites with
+`in_sites_strip` true, in file order; this site (`site.id`) gets
+`sites-strip__item--current`, `aria-current="true"` and its `short_name`
+("Podcast"). `test/sites-strip.test.js` builds the site in memory and pins the
+links and the current marker, and compares the vendored file with
+`../shared/sites.json` when that sibling is checked out (CI checks out only this
+repo, so there it is reported as skipped; run `npm run sites:check` locally).
+
+The footer's "The family" column and the home and About page lists still read
+the hand-kept `family` list in `src/_data/site.js` (blog and Weekly Thing only).
+
 ## Search
 
 Pagefind indexes elements marked `data-pagefind-body` (archive list items, episode pages, transcript pages). The archive page (`src/archive.njk`) wires up the Pagefind UI. The search index is built after Eleventy in `npm run build`.
 
 ## Deploy
 
-GitHub Pages, custom domain via `CNAME` at the repo root (passthrough-copied to `_site/CNAME`). The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci && npm run build` and publishes `_site/`.
+GitHub Pages, custom domain via `CNAME` at the repo root (passthrough-copied to `_site/CNAME`). The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci`, `npm test` and `npm run build` and publishes `_site/`.

@@ -51,6 +51,15 @@ npm run build
 
 Runs Eleventy, then builds the Pagefind search index over the output in `_site/`.
 
+```bash
+npm test
+```
+
+Runs the `node --test` suite: the docs check, the sites strip on the built pages,
+and whether the vendored `src/_data/sites.json` still matches
+`../shared/sites.json` (skipped when that sibling folder is not checked out, as in
+CI).
+
 ## Architecture
 
 - **Eleventy 3** with Nunjucks templates; ESM project (`"type": "module"`).
@@ -58,6 +67,7 @@ Runs Eleventy, then builds the Pagefind search index over the output in `_site/`
 - **Markdown-per-episode**, one file in `content/episodes/`, with auto-derived audio metadata via `music-metadata`. No central JSON database.
 - **Transcripts inline** on each episode page, below the show notes.
 - **Pagefind** client-side search, indexed once per episode and reachable from `/search/`.
+- **Jamie's sites strip** at the top of every page, the same strip as on Jamie's other sites. It renders at build time from `src/_data/sites.json`, a vendored copy of `thingelstad.com/shared/sites.json`: edit the shared file, then run `npm run sites:sync` (and `npm run sites:check` to confirm). The markup and colours are the shared contract in `thingelstad.com/AGENTS.md`.
 - **Tinylytics** for privacy-friendly analytics, per-episode kudos buttons, visitor country flags, and a play-event custom event fired the first time each episode is played.
 - **GitHub Pages** with custom domain via `CNAME`. Deploy workflow at `.github/workflows/deploy.yml`.
 
@@ -89,4 +99,4 @@ Permalink shape and GUID handling live in `lib/loadEpisodes.js`.
 
 ## Deploy
 
-Pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci && npm run build` and publishes `_site/` to GitHub Pages. The custom domain is set via the `CNAME` file at the repo root.
+Pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci`, `npm test` and `npm run build` and publishes `_site/` to GitHub Pages. The custom domain is set via the `CNAME` file at the repo root.

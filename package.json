@@ -11,6 +11,8 @@
     "build": "eleventy && pagefind --site _site",
     "serve": "eleventy --serve",
     "clean": "rm -rf _site",
+    "sites:sync": "node scripts/sync-sites.mjs",
+    "sites:check": "node scripts/sync-sites.mjs --check",
     "test": "node --test"
   },
   "devDependencies": {

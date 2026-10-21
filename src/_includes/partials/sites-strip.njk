@@ -1,0 +1,18 @@
+{#- The "Jamie's sites" strip that opens every one of Jamie's sites. The markup
+    is the shared contract in thingelstad.com/AGENTS.md ("The sites strip"):
+    sites with in_sites_strip true, in file order, from the vendored
+    src/_data/sites.json (npm run sites:sync). The current site (site.id)
+    shows its short name, the others their full names. -#}
+<nav class="sites-strip" aria-label="Jamie's sites">
+  <div class="sites-strip__inner">
+    <span class="sites-strip__label">Jamie's sites</span>
+    <ul class="sites-strip__list">
+      {%- for s in sites.sites %}{% if s.in_sites_strip %}
+      {%- set current = s.id == site.id %}
+      <li class="sites-strip__item sites-strip__item--{{ s.id | escape }}{% if current %} sites-strip__item--current{% endif %}">
+        <a href="{{ s.url | escape }}" title="{{ s.description | escape }}"{% if current %} aria-current="true"{% endif %}>{% if current %}{{ (s.short_name or s.name) | escape }}{% else %}{{ s.name | escape }}{% endif %}</a>
+      </li>
+      {%- endif %}{% endfor %}
+    </ul>
+  </div>
+</nav>

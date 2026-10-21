@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   </head>
   <body class="{{ bodyClass }}">
+    {% include "partials/sites-strip.njk" %}
     {% include "partials/header.njk" %}
     <main id="main">
       {{ content | safe }}

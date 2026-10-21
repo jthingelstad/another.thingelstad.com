@@ -122,8 +122,10 @@ current marker, and compares the vendored file with `../shared/sites.json` when
 that sibling is checked out (CI checks out only this repo, so there it is
 reported as skipped; run `npm run sites:check` locally).
 
-The footer's "The family" column and the home and About page lists still read
-the hand-kept `family` list in `src/_data/site.js` (blog and Weekly Thing only).
+The footer has no list of sites: its "The family" column was removed on
+2026-10-21 because the strip carries every site. The home and About page lists
+still read the hand-kept `family` list in `src/_data/site.js` (blog and Weekly
+Thing only).
 
 ## Search
 

@@ -821,7 +821,7 @@ main > section.hero { max-width: none; }
   max-width: var(--container);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: var(--space-6);
 }
 @media (max-width: 720px) {
@@ -859,11 +859,6 @@ main > section.hero { max-width: none; }
   font-size: 0.95rem;
 }
 .site-footer__col a:hover { color: var(--accent); }
-.site-footer__hint {
-  color: var(--text-mute);
-  font-size: 0.8rem;
-  margin-left: 6px;
-}
 .site-footer__legal {
   max-width: var(--container);
   margin: var(--space-7) auto 0;

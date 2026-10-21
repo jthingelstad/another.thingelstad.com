@@ -245,6 +245,13 @@ main { display: block; }
 .site-header__nav a:hover {
   color: var(--accent);
 }
+/* Phones: the nav drops under the title and wraps instead of pushing the page
+   sideways (it overflowed 39-149px at 430-320px). */
+@media (max-width: 540px) {
+  .site-header__inner { flex-wrap: wrap; row-gap: var(--space-3); }
+  .site-header__title { white-space: nowrap; }
+  .site-header__nav { flex-wrap: wrap; gap: var(--space-2) var(--space-4); }
+}
 
 /* ----- Hero ------------------------------------------------------------- */
 
@@ -490,8 +497,13 @@ main > section.hero { max-width: none; }
 @media (prefers-color-scheme: dark) {
   .player { background: var(--navy-800); border: 1px solid var(--line); }
 }
+/* Phones: the cover sits above the controls, which wrap, so the five controls
+   (about 310px) no longer overflow a 96px-art row. */
 @media (max-width: 540px) {
-  .player { grid-template-columns: 96px 1fr; padding: var(--space-4); gap: var(--space-4); }
+  .player { grid-template-columns: 1fr; padding: var(--space-4); gap: var(--space-4); }
+  .player__art { width: 96px; }
+  .player__body { min-width: 0; }
+  .player__controls { flex-wrap: wrap; }
 }
 .player__art img {
   width: 100%;
@@ -530,6 +542,9 @@ main > section.hero { max-width: none; }
 }
 .player__btn--play:hover { background: var(--accent-warm); }
 .player__btn--play svg { width: 28px; height: 28px; }
+/* The hidden attribute does not hide an inline <svg> (the UA rule is for HTML
+   elements), so the play and pause icons both showed. player.js toggles it. */
+.player__icon[hidden] { display: none; }
 .player__btn--rate {
   width: auto;
   padding: 0 var(--space-3);

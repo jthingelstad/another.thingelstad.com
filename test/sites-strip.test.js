@@ -65,16 +65,16 @@ test("the strip links the in_sites_strip sites in file order and marks Another T
     const current = items.filter((item) => item.current);
     assert.equal(current.length, 1, `${page.url}: exactly one current site`);
     assert.equal(current[0].href, "https://another.thingelstad.com/");
-    assert.equal(current[0].text, "Podcast");
+    assert.equal(current[0].text, "Another Thing", "this site reads as it does on every other site");
     assert.ok(current[0].classes.includes("sites-strip__item--another"));
     assert.ok(current[0].classes.includes("sites-strip__item--current"));
 
     for (const [index, item] of items.entries()) {
       const site = stripSites[index];
       assert.ok(item.classes.includes(`sites-strip__item--${site.id}`));
+      assert.equal(item.text, site.strip_label.replace(/'/g, "&#39;"));
       if (site.id !== "another") {
         assert.ok(!item.classes.includes("sites-strip__item--current"));
-        assert.equal(item.text, site.name.replace(/'/g, "&#39;"));
       }
     }
   }

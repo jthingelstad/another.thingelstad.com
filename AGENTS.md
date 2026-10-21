@@ -113,8 +113,9 @@ the rest of the site).
 
 It renders at build time from `src/_data/sites.json`: sites with
 `in_sites_strip` true, in file order; this site (`site.id`) gets
-`sites-strip__item--current`, `aria-current="true"` and its `short_name`
-("Podcast"). `test/sites-strip.test.js` builds the site in memory and pins the
+`sites-strip__item--current` and `aria-current="true"`. Every site, this one
+included, reads as its `strip_label` ("Another Thing" here too), so the wording
+matches every other site. `test/sites-strip.test.js` builds the site in memory and pins the
 links and the current marker, and compares the vendored file with
 `../shared/sites.json` when that sibling is checked out (CI checks out only this
 repo, so there it is reported as skipped; run `npm run sites:check` locally).

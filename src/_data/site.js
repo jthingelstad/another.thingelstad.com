@@ -22,20 +22,6 @@ export default {
     type: "episodic",
     explicit: false,
   },
-  family: [
-    {
-      name: "thingelstad.com",
-      label: "Blog",
-      url: "https://www.thingelstad.com",
-      description: "Twenty plus years of writing on the web.",
-    },
-    {
-      name: "Weekly Thing",
-      label: "Newsletter",
-      url: "https://weekly.thingelstad.com",
-      description: "A weekly newsletter of curated links since 2017.",
-    },
-  ],
   subscribe: [
     {
       name: "Apple Podcasts",

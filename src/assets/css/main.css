@@ -837,6 +837,26 @@ main > section.hero { max-width: none; }
   font-size: 0.95rem;
   margin: 0;
 }
+/* Jamie's h-card (thingelstad.com/AGENTS.md, "Jamie on every site"): the
+   bird photo as a 28px round avatar beside the name. */
+.site-footer__tagline .h-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  vertical-align: middle;
+  color: var(--text);
+  font-weight: 500;
+}
+.site-footer__tagline .h-card:hover { color: var(--accent); text-decoration: none; }
+.site-footer__tagline .h-card:hover .p-name { text-decoration: underline; }
+.site-footer__tagline .u-photo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px var(--line);
+  flex: none;
+}
 .site-footer__col h2 {
   font-size: 0.8rem;
   text-transform: uppercase;

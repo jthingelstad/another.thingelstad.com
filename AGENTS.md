@@ -49,7 +49,7 @@ npm run clean       # rm -rf _site
   for the Librarian/Thingy podcast corpus. This repo remains the publishing surface;
   corpus ownership stays with the Librarian.
 - **`uploads/YYYY/`** — MP3s and cover art, served at `/uploads/YYYY/` via passthrough.
-- **`lib/loadEpisodes.js`** — reads episodes, extracts MP3 duration + bytes via `music-metadata`, computes permalinks. Called by `src/_data/episodes.js` and `episodesWithTranscripts.js`.
+- **`lib/loadEpisodes.js`** — reads episodes, extracts MP3 duration + bytes via `music-metadata`, computes permalinks, and reads each episode's optional `.txt` transcript into `transcriptText`. Called only by `src/_data/episodes.js`.
 - **`src/_data/sites.json`** — vendored copy of `thingelstad.com/shared/sites.json`, the canonical list of Jamie's sites. Never edit it here: edit the shared file, then `npm run sites:sync` (`scripts/sync-sites.mjs`). `src/_data/site.js` `id` (`another`) is this site's id in it.
 - **`eleventy.config.js`** — directory config, passthrough copy, and all custom filters.
 - **`_site/`** — build output, git-ignored.
@@ -60,7 +60,8 @@ ESM project (`"type": "module"` in `package.json`). Use `import`, not `require`.
 
 - `readableDate(fmt?)` — luxon, default `"LLLL d, yyyy"`
 - `isoDate`, `rfc822Date` — luxon-formatted for sitemap and RSS
-- `hms` — `HH:MM:SS` / `MM:SS` from seconds (player and RSS `itunes:duration`)
+- `hms` — `H:MM:SS` / `MM:SS` from seconds (the player's total time)
+- `hmsLong` — always `HH:MM:SS` from seconds (RSS `itunes:duration` in `podcast.xml.njk`)
 - `friendlyDuration` — `"11 min"` / `"1 hr 15 min"` from seconds
 - `xmlEscape`, `cdata` — XML output safety
 - `renderMarkdown` — markdown-it (html + linkify + typographer)
@@ -123,13 +124,34 @@ that sibling is checked out (CI checks out only this repo, so there it is
 reported as skipped; run `npm run sites:check` locally).
 
 The footer has no list of sites: its "The family" column was removed on
-2026-10-21 because the strip carries every site. The home and About page lists
-still read the hand-kept `family` list in `src/_data/site.js` (blog and Weekly
-Thing only).
+2026-10-21 because the strip carries every site. The home page's "More from
+Jamie" cards and the About page's "The family" list render from the same
+`sites.json`: every `in_sites_strip` site except this one, in file order, as
+`strip_label` with its `description`. There is no hand-kept list in
+`src/_data/site.js` any more.
+
+## Jamie and the links to the other sites
+
+These follow `thingelstad.com/AGENTS.md` ("Jamie on every site", "Links between
+the sites"):
+
+- The footer's "A podcast by Jamie Thingelstad" is the shared h-card, built from
+  `owner` in `sites.json`: `owner.avatar` (the bird photo) as a 28px round
+  `u-photo`, `p-name`, and `owner.note` as `p-note`. Styles sit with the footer
+  rules in `main.css`. `layouts/base.njk` puts a `<link rel="me">` in `<head>`
+  for each `owner.rel_me`. Identity links never carry a `ref`.
+- Every template link to another strip site carries `?ref=another-<placement>`:
+  `another-family` (home cards), `another-about` (About prose and list),
+  `another-episode` (the episode page's "Explore with Thingy", appended as
+  `&ref=` after the encoded `?explore=` URL). The strip keeps
+  `?ref=sites-strip-another`. Episode show notes and transcripts are content
+  and are never rewritten to add refs.
+- Copy that says how long Jamie has written says "since 2004" or
+  "twenty-plus years", never 2000 or 25 years.
 
 ## Search
 
-Pagefind indexes elements marked `data-pagefind-body` (archive list items, episode pages, transcript pages). The archive page (`src/archive.njk`) wires up the Pagefind UI. The search index is built after Eleventy in `npm run build`.
+Pagefind indexes only elements marked `data-pagefind-body`, and the one such element is the episode `<article>` in `src/_includes/layouts/episode.njk` (transcripts render inside it, under `#transcript`, so they are indexed with their episode). The search page (`src/search.njk`, `/search/`) loads and wires up the Pagefind UI; the archive page does not. The search index is built after Eleventy in `npm run build`.
 
 ## Deploy
 

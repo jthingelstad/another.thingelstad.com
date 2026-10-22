@@ -56,16 +56,17 @@ eleventyComputed:
 {% endif %}
 
 <section class="family">
-  <h2 class="section-title">Part of a small family of sites</h2>
-  <p class="family__intro">Another Thing joins two other long-running projects.</p>
+  <h2 class="section-title">More from Jamie</h2>
+  <p class="family__intro">Another Thing is one of Jamie's sites.</p>
   <ul class="family__list">
-    {% for f in site.family %}
+    {#- Jamie's other strip sites, in sites.json order (thingelstad.com/AGENTS.md). -#}
+    {% for s in sites.sites %}{% if s.in_sites_strip and s.id != site.id %}
       <li>
-        <a href="{{ f.url }}">
-          <strong>{{ f.name }}</strong>
-          <span>{{ f.description }}</span>
+        <a href="{{ s.url }}?ref={{ site.id }}-family">
+          <strong>{{ s.strip_label or s.name }}</strong>
+          <span>{{ s.description }}</span>
         </a>
       </li>
-    {% endfor %}
+    {% endif %}{% endfor %}
   </ul>
 </section>

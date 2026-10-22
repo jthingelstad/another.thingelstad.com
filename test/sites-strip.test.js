@@ -90,3 +90,51 @@ test("vendored sites.json matches the shared copy", async (t) => {
   const current = await readFile(new URL("../src/_data/sites.json", import.meta.url), "utf8");
   assert.equal(current, shared, "Vendored sites.json is stale. Run npm run sites:sync.");
 });
+
+// Jamie's h-card, rel=me and the ?ref=another-<placement> links follow
+// thingelstad.com/AGENTS.md ("Jamie on every site", "Links between the sites").
+const otherSites = stripSites.filter((site) => site.id !== "another");
+
+test("the home and About family lists are every other strip site, tagged with a ref", () => {
+  const home = pages.find((page) => page.url === "/");
+  const about = pages.find((page) => page.url === "/about/");
+  assert.ok(about, "no About page");
+
+  const cards = home.content.match(/<ul class="family__list">[\s\S]*?<\/ul>/)?.[0] ?? "";
+  assert.deepEqual(
+    [...cards.matchAll(/href="([^"]*)"/g)].map(([, href]) => href),
+    otherSites.map((site) => `${site.url}?ref=another-family`),
+  );
+  assert.doesNotMatch(home.content, /small family|two other/);
+
+  const list = about.content.match(/<h2>The family<\/h2>\s*<ul>[\s\S]*?<\/ul>/)?.[0] ?? "";
+  assert.deepEqual(
+    [...list.matchAll(/href="([^"]*)"/g)].map(([, href]) => href),
+    otherSites.map((site) => `${site.url}?ref=another-about`),
+  );
+});
+
+test("every page names Jamie with the shared h-card and carries rel=me", () => {
+  for (const page of pages) {
+    const card = page.content.match(/<a class="h-card"[^>]*>[\s\S]*?<\/a>/)?.[0];
+    assert.ok(card, `${page.url} has no h-card`);
+    assert.match(card, new RegExp(`href="${vendored.owner.url}" rel="me author"`), `${page.url}: identity link carries no ref`);
+    assert.match(card, new RegExp(`<img class="u-photo" src="${vendored.owner.avatar}"`));
+    assert.match(card, /<span class="p-name">Jamie Thingelstad<\/span>/);
+    assert.match(card, /<data class="p-note" value="[^"]+"><\/data>/);
+
+    const head = page.content.match(/<head>[\s\S]*?<\/head>/)?.[0] ?? "";
+    for (const url of vendored.owner.rel_me) {
+      assert.ok(head.includes(`<link rel="me" href="${url}">`), `${page.url}: rel=me ${url}`);
+    }
+  }
+});
+
+test("the episode page's Thingy link keeps the encoded explore URL and adds the ref", () => {
+  const episode = pages.find((page) => /^\/\d{4}\/\d{2}\/\d{2}\/[^/]+\.html$/.test(page.url));
+  const href = episode.content.match(/href="(https:\/\/thingy\.thingelstad\.com\/chat\/[^"]*)"/)?.[1];
+  assert.ok(href, "no Explore with Thingy link");
+  const url = new URL(href.replace(/&amp;/g, "&"));
+  assert.equal(url.searchParams.get("explore"), `https://another.thingelstad.com${episode.url}`);
+  assert.equal(url.searchParams.get("ref"), "another-episode");
+});

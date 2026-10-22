@@ -121,13 +121,6 @@ h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
 h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
 h3 { font-size: var(--jt-size-h3); }
 
-/* Another Thing's titles are italic. Inter Tight has no italic face, so the
-   browser slants it, and its narrow word space closes up ("start a podcast"
-   ran together); open the spaces a little. */
-.hero__title, .card__title, .episode__title, .episode__transcript-title,
-.archive__title, .archive__episode-title, .search-page__title,
-.subscribe__title, .about__title, .notfound h1 { word-spacing: 0.1em; }
-
 code, kbd, pre, samp { font-family: var(--font-code); }
 
 p { margin: 0 0 var(--space-4); }
@@ -330,7 +323,6 @@ main { display: block; }
 }
 .hero__title {
   font-size: clamp(2.8rem, 7vw, 5rem);
-  font-style: italic;
   margin: 0 0 var(--space-3);
   line-height: 0.95;
 }
@@ -442,7 +434,6 @@ main > section.hero { max-width: none; }
 }
 .card__title {
   font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-style: italic;
   margin-bottom: var(--space-3);
 }
 .card__title a {
@@ -653,7 +644,6 @@ main > section.hero { max-width: none; }
 }
 .episode__title {
   font-size: clamp(2rem, 5vw, 3.4rem);
-  font-style: italic;
   margin-bottom: var(--space-4);
 }
 .episode__summary {
@@ -678,7 +668,6 @@ main > section.hero { max-width: none; }
   border-top: 1px solid var(--line);
 }
 .episode__transcript-title {
-  font-style: italic;
   font-size: clamp(1.6rem, 3.5vw, 2.2rem);
   margin: 0 0 var(--space-5);
 }
@@ -729,13 +718,11 @@ main > section.hero { max-width: none; }
   margin: var(--space-5) 0;
   padding: var(--space-2) var(--space-5);
   color: var(--text-soft);
-  font-style: italic;
 }
 
 /* ----- Archive ---------------------------------------------------------- */
 
 .archive__title {
-  font-style: italic;
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   margin-bottom: var(--space-3);
 }
@@ -744,7 +731,6 @@ main > section.hero { max-width: none; }
 /* ----- Search ----------------------------------------------------------- */
 
 .search-page__title {
-  font-style: italic;
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   margin-bottom: var(--space-3);
 }
@@ -793,7 +779,6 @@ main > section.hero { max-width: none; }
 }
 .archive__episode-title {
   font-size: 1.4rem;
-  font-style: italic;
   margin-bottom: var(--space-2);
 }
 .archive__summary {
@@ -811,7 +796,6 @@ main > section.hero { max-width: none; }
 
 .subscribe__title,
 .about__title {
-  font-style: italic;
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   margin-bottom: var(--space-3);
 }
@@ -856,7 +840,6 @@ main > section.hero { max-width: none; }
 /* ----- 404 -------------------------------------------------------------- */
 
 .notfound h1 {
-  font-style: italic;
   margin-bottom: var(--space-4);
 }
 

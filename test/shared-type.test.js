@@ -97,3 +97,14 @@ test("nothing in main.css is set below 14px", () => {
   const scale = Number(css.match(/--pagefind-ui-scale:\s*([\d.]+)/)?.[1]);
   assert.ok(scale >= 1, `--pagefind-ui-scale ${scale} puts Pagefind's smallest text below 14px`);
 });
+
+// No slanted sans in the design. Jamie, 2026-10-22: "I really dislike italics
+// with san serif fonts … I like the color and I like using font weight with
+// san serif". Titles and pull quotes stand upright; the <i> tags in the
+// templates are the decorative dots, not text.
+test("nothing in main.css slants the type", () => {
+  const rules = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  assert.doesNotMatch(rules, /font-style:\s*(italic|oblique)/);
+  assert.doesNotMatch(rules, /font-variation-settings:[^;]*"slnt"/);
+  assert.doesNotMatch(rules, /transform:[^;]*skew/);
+});

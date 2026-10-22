@@ -154,10 +154,12 @@ and links `tokens.css` before `main.css`; no font host (rsms.me is gone).
   themselves take `--container`, rows inside a padded block (strip, header, hero,
   footer) take `--container-inner`, so every edge lines up at 1072px of content.
   The episode and page column is the blog's 720px measure.
-- The titles stay italic, Another Thing's own look. Inter Tight has no italic, so
-  the browser slants it; the italic titles get `word-spacing: 0.1em` because the
-  slanted face's narrow spaces closed up. The shared Inter has no `cv11`/`ss01`,
-  so the single-storey a and open digits that rsms.me's Inter gave are gone.
+- No italics in the design (Jamie, 2026-10-22: "I really dislike italics with san
+  serif fonts … I like the color and I like using font weight with san serif"). The
+  titles, once slanted, stand upright in Inter Tight 800; pull quotes in show notes
+  stand upright beside their crimson bar. `test/shared-type.test.js` fails on any
+  `font-style: italic` in `main.css`. The shared Inter has no `cv11`/`ss01`, so the
+  single-storey a and open digits that rsms.me's Inter gave are gone.
 
 ## Colours and favicon
 

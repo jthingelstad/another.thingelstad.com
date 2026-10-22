@@ -130,6 +130,25 @@ Jamie" cards and the About page's "The family" list render from the same
 `strip_label` with its `description`. There is no hand-kept list in
 `src/_data/site.js` any more.
 
+## Colours and favicon
+
+The accent is Another Thing crimson, the `--jt-another*` colours in
+`thingelstad.com/shared/tokens.css`; it replaced the cover art's orange-red on
+2026-10-22 (Jamie: "Approved: phase 2 colours, Another Thing to crimson ...").
+`main.css` carries it as `--accent` (the fill: buttons, the play button,
+selection; white on it 6.8:1), `--accent-hover` (`#cc1548`, white on it
+5.6:1), `--accent-text` (links and marks on the page: `#b3123f`, `#f58aa3` in
+dark mode) and `--accent-soft` (the hero tint: `#fbeef2`, `#2b1820` dark).
+Text and marks use `--accent-text`, never `--accent`: the fill is only 2.4:1
+on the dark ground. The slate `--navy-*` palette still comes from the cover art.
+
+`src/assets/images/favicon.svg` is a crimson tile with three dots, two pale
+(`#f7a8ba`, 3.7:1 on the tile) and the last white (6.8:1). `layouts/base.njk`
+loads it as `favicon.svg?v=2` so browsers refetch it; bump the number whenever
+the icon changes. The cover art (`/uploads/2025/another-thing-3000.png`, also
+the apple-touch-icon and the feed artwork) still has its orange-red third dot;
+changing it is Jamie's call.
+
 ## Jamie and the links to the other sites
 
 These follow `thingelstad.com/AGENTS.md` ("Jamie on every site", "Links between

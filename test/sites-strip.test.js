@@ -138,3 +138,36 @@ test("the episode page's Thingy link keeps the encoded explore URL and adds the 
   assert.equal(url.searchParams.get("explore"), `https://another.thingelstad.com${episode.url}`);
   assert.equal(url.searchParams.get("ref"), "another-episode");
 });
+
+// Colours: the strip's marks are the contract's (light, then dark under
+// prefers-color-scheme), and the site's own accent is Another Thing crimson
+// (shared/tokens.css), with no trace of the orange-red it replaced.
+test("the strip and the site use the contract's colours, and the old orange-red is gone", async () => {
+  const css = await readFile(new URL("../src/assets/css/main.css", import.meta.url), "utf8");
+  const favicon = await readFile(new URL("../src/assets/images/favicon.svg", import.meta.url), "utf8");
+
+  const light = css.match(/\.sites-strip \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const dark = css.match(/@media \(prefers-color-scheme: dark\) \{\s*\.sites-strip \{[\s\S]*?\}/)?.[0] ?? "";
+  const marks = {
+    weekly: ["#1a5eb6", "#78acf2"],
+    another: ["#b3123f", "#f58aa3"],
+    thingy: ["#b5461a", "#f3a274"],
+    xyz: ["#1d7348", "#74d3a0"],
+  };
+  for (const [id, [lightValue, darkValue]] of Object.entries(marks)) {
+    assert.match(light, new RegExp(`--strip-${id}:\\s*${lightValue};`), `strip ${id} (light)`);
+    assert.match(dark, new RegExp(`--strip-${id}:\\s*${darkValue};`), `strip ${id} (dark)`);
+    assert.ok(css.includes(`.sites-strip__item--${id} a { color: var(--strip-${id}); }`), `strip ${id} rule`);
+  }
+
+  assert.match(css, /--accent:\s*#b3123f;/);
+  assert.match(css, /--accent-text:\s*#f58aa3;/);
+  for (const old of ["#e84a30", "#c63a20", "#f08c76", "#f06845", "accent-warm"]) {
+    assert.ok(!css.toLowerCase().includes(old), `main.css still has ${old}`);
+    assert.ok(!favicon.toLowerCase().includes(old), `favicon.svg still has ${old}`);
+  }
+  assert.match(favicon, /<rect [^>]*fill="#b3123f"/, "favicon is a crimson tile");
+
+  const home = pages.find((page) => page.url === "/");
+  assert.match(home.content, /<link rel="icon" href="\/assets\/images\/favicon\.svg\?v=\d+" type="image\/svg\+xml">/);
+});

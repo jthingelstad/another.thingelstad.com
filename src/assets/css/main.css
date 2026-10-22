@@ -3,7 +3,7 @@
    ========================================================================== */
 
 :root {
-  /* Palette pulled from the cover artwork */
+  /* Slate palette pulled from the cover artwork */
   --navy-900: #1f2a38;
   --navy-800: #2c3a4d;
   --navy-700: #3d526b;
@@ -12,8 +12,17 @@
   --navy-100: #e6eaf0;
   --navy-50:  #f4f6f9;
 
-  --accent:        #e84a30;
-  --accent-warm:   #f06845;
+  /* Another Thing crimson: the --jt-another colours in
+     thingelstad.com/shared/tokens.css, which replaced the cover art's
+     orange-red on 2026-10-22. --accent is the fill (buttons, the play
+     button, selection), --accent-text is for links and for marks on the
+     page (the third dot, rules, hover borders), --accent-soft is a tinted
+     ground. White on the fill is 6.8:1, on the hover fill 5.6:1; the text
+     colour is 6.8:1 on white and 6.3:1 on the footer's #f4f6f9. */
+  --accent:        #b3123f;
+  --accent-hover:  #cc1548;
+  --accent-text:   #b3123f;
+  --accent-soft:   #fbeef2;
   --muted:         #7c8b9c;
 
   --bg:        #ffffff;
@@ -56,6 +65,9 @@
     --text-mute: #8b97a6;
     --line:      rgba(255, 255, 255, 0.1);
     --shadow:    0 2px 4px rgba(0, 0, 0, 0.3), 0 18px 48px -18px rgba(0, 0, 0, 0.6);
+    /* The fill stays; text and marks lighten, the soft ground darkens. */
+    --accent-text: #f58aa3;
+    --accent-soft: #2b1820;
   }
 }
 
@@ -96,7 +108,7 @@ h3 { font-size: 1.25rem; font-weight: 700; }
 p { margin: 0 0 var(--space-4); }
 
 a {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: none;
   text-decoration-skip-ink: auto;
 }
@@ -127,7 +139,7 @@ main { display: block; }
 }
 .dots i:nth-child(1) { opacity: 0.45; }
 .dots i:nth-child(2) { opacity: 0.55; }
-.dots i:nth-child(3) { background: var(--accent); opacity: 1; }
+.dots i:nth-child(3) { background: var(--accent-text); opacity: 1; }
 
 /* ----- Jamie's sites strip ---------------------------------------------- */
 /* The same strip opens every one of Jamie's sites, so its values come from
@@ -140,8 +152,9 @@ main { display: block; }
   --strip-label:  #5a5a66;
   --strip-ink:    #16161a;
   --strip-weekly: #1a5eb6;
-  --strip-another: #c63a20;
+  --strip-another: #b3123f;
   --strip-thingy: #b5461a;
+  --strip-xyz:    #1d7348;
 
   padding: 0 var(--space-5);
   background: var(--strip-ground);
@@ -156,8 +169,9 @@ main { display: block; }
     --strip-label:  #9d9daa;
     --strip-ink:    #ececf0;
     --strip-weekly: #78acf2;
-    --strip-another: #f08c76;
+    --strip-another: #f58aa3;
     --strip-thingy: #f3a274;
+    --strip-xyz:    #74d3a0;
   }
 }
 .sites-strip__inner {
@@ -196,6 +210,7 @@ main { display: block; }
 .sites-strip__item--weekly a { color: var(--strip-weekly); }
 .sites-strip__item--another a { color: var(--strip-another); }
 .sites-strip__item--thingy a { color: var(--strip-thingy); }
+.sites-strip__item--xyz a { color: var(--strip-xyz); }
 
 @media (max-width: 40rem) {
   .sites-strip__inner { flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 18px; }
@@ -243,7 +258,7 @@ main { display: block; }
   color: var(--text-soft);
 }
 .site-header__nav a:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 /* Phones: the nav drops under the title and wraps instead of pushing the page
    sideways (it overflowed 39-149px at 430-320px). */
@@ -258,7 +273,7 @@ main { display: block; }
 .hero {
   padding: var(--space-9) var(--space-5);
   background:
-    radial-gradient(ellipse at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+    radial-gradient(ellipse at top right, var(--accent-soft), transparent 60%),
     var(--bg);
 }
 .hero__inner {
@@ -326,7 +341,7 @@ main { display: block; }
   color: #fff;
   border-color: var(--accent);
 }
-.button--primary:hover { background: var(--accent-warm); }
+.button--primary:hover { background: var(--accent-hover); }
 
 .link-button {
   display: inline-flex;
@@ -339,7 +354,7 @@ main { display: block; }
   font-weight: 500;
   font-size: 0.9rem;
 }
-.link-button:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.link-button:hover { border-color: var(--accent-text); color: var(--accent-text); text-decoration: none; }
 
 /* ----- Sections --------------------------------------------------------- */
 
@@ -360,7 +375,7 @@ main > section.hero { max-width: none; }
 }
 .section-link {
   font-size: 0.9rem;
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 500;
 }
 
@@ -403,7 +418,7 @@ main > section.hero { max-width: none; }
   color: var(--text);
 }
 .card__title a:hover {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: none;
 }
 .card__summary {
@@ -432,7 +447,7 @@ main > section.hero { max-width: none; }
   color: var(--text);
 }
 .episode-list__link:hover { text-decoration: none; }
-.episode-list__link:hover .episode-list__title { color: var(--accent); }
+.episode-list__link:hover .episode-list__title { color: var(--accent-text); }
 .episode-list__number {
   font-variant-numeric: tabular-nums;
   color: var(--text-mute);
@@ -474,7 +489,7 @@ main > section.hero { max-width: none; }
   transition: border-color 120ms ease, transform 120ms ease;
 }
 .family__list a:hover {
-  border-color: var(--accent);
+  border-color: var(--accent-text);
   text-decoration: none;
   transform: translateY(-1px);
 }
@@ -540,7 +555,7 @@ main > section.hero { max-width: none; }
   height: 56px;
   background: var(--accent);
 }
-.player__btn--play:hover { background: var(--accent-warm); }
+.player__btn--play:hover { background: var(--accent-hover); }
 .player__btn--play svg { width: 28px; height: 28px; }
 /* The hidden attribute does not hide an inline <svg> (the UA rule is for HTML
    elements), so the play and pause icons both showed. player.js toggles it. */
@@ -676,7 +691,7 @@ main > section.hero { max-width: none; }
 .prose li { margin-bottom: 0.4rem; }
 .prose a { font-weight: 500; }
 .prose blockquote {
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--accent-text);
   margin: var(--space-5) 0;
   padding: var(--space-2) var(--space-5);
   color: var(--text-soft);
@@ -704,7 +719,7 @@ main > section.hero { max-width: none; }
 .search-page__box {
   --pagefind-ui-scale: 0.9;
   --pagefind-ui-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --pagefind-ui-primary: var(--accent);
+  --pagefind-ui-primary: var(--accent-text);
   --pagefind-ui-text: var(--text);
   --pagefind-ui-background: var(--bg-card);
   --pagefind-ui-border: var(--line);
@@ -732,7 +747,7 @@ main > section.hero { max-width: none; }
   color: var(--text);
 }
 .archive__item a:hover { text-decoration: none; }
-.archive__item a:hover .archive__episode-title { color: var(--accent); }
+.archive__item a:hover .archive__episode-title { color: var(--accent-text); }
 .archive__number {
   font-variant-numeric: tabular-nums;
   color: var(--text-mute);
@@ -787,7 +802,7 @@ main > section.hero { max-width: none; }
   transition: border-color 120ms ease, transform 120ms ease;
 }
 .subscribe__card:hover {
-  border-color: var(--accent);
+  border-color: var(--accent-text);
   text-decoration: none;
   transform: translateY(-1px);
 }
@@ -847,7 +862,7 @@ main > section.hero { max-width: none; }
   color: var(--text);
   font-weight: 500;
 }
-.site-footer__tagline .h-card:hover { color: var(--accent); text-decoration: none; }
+.site-footer__tagline .h-card:hover { color: var(--accent-text); text-decoration: none; }
 .site-footer__tagline .h-card:hover .p-name { text-decoration: underline; }
 .site-footer__tagline .u-photo {
   width: 28px;
@@ -878,7 +893,7 @@ main > section.hero { max-width: none; }
   font-weight: 500;
   font-size: 0.95rem;
 }
-.site-footer__col a:hover { color: var(--accent); }
+.site-footer__col a:hover { color: var(--accent-text); }
 .site-footer__legal {
   max-width: var(--container);
   margin: var(--space-7) auto 0;
@@ -891,4 +906,4 @@ main > section.hero { max-width: none; }
 }
 .site-footer__legal p { margin: 0; }
 .site-footer__legal a { color: var(--text-mute); }
-.site-footer__legal a:hover { color: var(--accent); }
+.site-footer__legal a:hover { color: var(--accent-text); }

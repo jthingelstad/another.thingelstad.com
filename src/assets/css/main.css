@@ -34,15 +34,32 @@
   --line:      rgba(31, 42, 56, 0.12);
   --shadow:    0 1px 2px rgba(31, 42, 56, 0.04), 0 12px 32px -16px rgba(31, 42, 56, 0.18);
 
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Inter", system-ui, sans-serif;
+  /* Type: the type every one of Jamie's sites shares, from
+     assets/css/shared/tokens.css (a byte-for-byte copy of thingelstad.com
+     shared/tokens.css, vendored with its fonts by npm run sites:sync).
+     Faces are named by role: Inter Tight for headings, Inter for reading
+     text, controls and labels, a system mono for code. Sizes are the blog's
+     scale, the --jt-size-* tokens: 19px body (18px on phones), nothing
+     below 14px. */
+  --font-heading: var(--jt-font-heading);
+  --font-body:    var(--jt-font-body);
+  --font-ui:      var(--jt-font-body);
+  --font-label:   var(--jt-font-body);
+  --font-code:    var(--jt-font-mono);
+  --weight-heading: var(--jt-weight-heading);
 
   --radius-sm: 6px;
   --radius:    14px;
   --radius-lg: 22px;
 
-  --container: 980px;
-  --container-narrow: 720px;
+  /* Frame: every site's 1120px (--jt-frame) with the 24px gutters inside
+     it, so the strip, header, content and footer line up with the blog's.
+     A block that pads itself takes --container; a row inside a padded
+     block takes --container-inner. The reading column is the blog's 720px
+     measure. */
+  --container: var(--jt-frame);
+  --container-inner: calc(var(--container) - 2 * var(--space-5));
+  --container-narrow: calc(var(--jt-measure) + 2 * var(--space-5));
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -73,37 +90,45 @@
 
 * { box-sizing: border-box; }
 
+/* No font-feature-settings: the shared Inter (Fontsource, from Google Fonts)
+   has no cv11 single-storey a or ss01 open digits, which rsms.me's Inter
+   had, so the text reads like the blog's. */
 html {
   -webkit-text-size-adjust: 100%;
-  font-feature-settings: "ss01", "cv11";
 }
 
 body {
   margin: 0;
-  font-family: var(--font-sans);
-  font-size: 17px;
-  line-height: 1.6;
+  font-family: var(--font-body);
+  font-size: var(--jt-size-base);
+  line-height: var(--jt-line-height);
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-@supports (font-variation-settings: normal) {
-  body { font-family: "InterVariable", "Inter", system-ui, sans-serif; }
-}
-
 h1, h2, h3, h4 {
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
   color: var(--text);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--jt-tracking-heading);
   line-height: 1.15;
   margin: 0 0 var(--space-4);
 }
 
-h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; }
-h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; }
-h3 { font-size: 1.25rem; font-weight: 700; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h3 { font-size: var(--jt-size-h3); }
+
+/* Another Thing's titles are italic. Inter Tight has no italic face, so the
+   browser slants it, and its narrow word space closes up ("start a podcast"
+   ran together); open the spaces a little. */
+.hero__title, .card__title, .episode__title, .episode__transcript-title,
+.archive__title, .archive__episode-title, .search-page__title,
+.subscribe__title, .about__title, .notfound h1 { word-spacing: 0.1em; }
+
+code, kbd, pre, samp { font-family: var(--font-code); }
 
 p { margin: 0 0 var(--space-4); }
 
@@ -158,7 +183,7 @@ main { display: block; }
 
   padding: 0 var(--space-5);
   background: var(--strip-ground);
-  font-family: "InterVariable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.6;
   font-feature-settings: normal;
@@ -175,7 +200,7 @@ main { display: block; }
   }
 }
 .sites-strip__inner {
-  max-width: var(--container);
+  max-width: var(--container-inner);
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -231,7 +256,7 @@ main { display: block; }
   background: color-mix(in srgb, var(--bg) 92%, transparent);
 }
 .site-header__inner {
-  max-width: var(--container);
+  max-width: var(--container-inner);
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -243,16 +268,18 @@ main { display: block; }
   align-items: center;
   gap: var(--space-2);
   color: var(--text);
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
   letter-spacing: -0.01em;
-  font-size: 1.05rem;
+  font-size: 1.25rem;
 }
 .site-header__brand:hover { text-decoration: none; }
 .site-header__nav {
   display: flex;
   gap: var(--space-5);
+  font-family: var(--font-ui);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: var(--jt-size-ui);
 }
 .site-header__nav a {
   color: var(--text-soft);
@@ -277,7 +304,7 @@ main { display: block; }
     var(--bg);
 }
 .hero__inner {
-  max-width: var(--container);
+  max-width: var(--container-inner);
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(220px, 320px) 1fr;
@@ -293,22 +320,22 @@ main { display: block; }
   box-shadow: var(--shadow);
 }
 .hero__eyebrow {
-  font-size: 0.85rem;
+  font-family: var(--font-label);
+  font-size: var(--jt-size-label);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--jt-tracking-label);
   color: var(--text-mute);
   margin-bottom: var(--space-3);
   font-weight: 600;
 }
 .hero__title {
   font-size: clamp(2.8rem, 7vw, 5rem);
-  font-weight: 900;
   font-style: italic;
   margin: 0 0 var(--space-3);
   line-height: 0.95;
 }
 .hero__tagline {
-  font-size: 1.15rem;
+  font-size: 1.3125rem;
   color: var(--text-soft);
   max-width: 36ch;
   margin-bottom: var(--space-6);
@@ -327,8 +354,9 @@ main { display: block; }
   gap: var(--space-2);
   padding: 0.85rem 1.5rem;
   border-radius: 999px;
+  font-family: var(--font-ui);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--jt-size-ui);
   border: 1px solid var(--line);
   background: var(--bg-card);
   color: var(--text);
@@ -351,8 +379,9 @@ main { display: block; }
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--text);
+  font-family: var(--font-ui);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: var(--jt-size-small);
 }
 .link-button:hover { border-color: var(--accent-text); color: var(--accent-text); text-decoration: none; }
 
@@ -366,15 +395,16 @@ main > section {
 main > section.hero { max-width: none; }
 
 .section-title {
-  font-size: 0.85rem;
+  font-family: var(--font-label);
+  font-size: var(--jt-size-label);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--jt-tracking-label);
   color: var(--text-mute);
   font-weight: 600;
   margin-bottom: var(--space-5);
 }
 .section-link {
-  font-size: 0.9rem;
+  font-size: var(--jt-size-small);
   color: var(--accent-text);
   font-weight: 500;
 }
@@ -402,10 +432,11 @@ main > section.hero { max-width: none; }
   margin-bottom: var(--space-5);
 }
 .card__eyebrow {
-  font-size: 0.85rem;
+  font-family: var(--font-label);
+  font-size: var(--jt-size-label);
   color: var(--text-mute);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--jt-tracking-label);
   font-weight: 600;
   margin-bottom: var(--space-2);
 }
@@ -423,7 +454,7 @@ main > section.hero { max-width: none; }
 }
 .card__summary {
   color: var(--text-soft);
-  font-size: 1.05rem;
+  font-size: var(--jt-size-base);
   margin-bottom: 0;
 }
 
@@ -452,15 +483,15 @@ main > section.hero { max-width: none; }
   font-variant-numeric: tabular-nums;
   color: var(--text-mute);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.0625rem;  /* 17px */
 }
 .episode-list__title {
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: var(--jt-size-base);
 }
 .episode-list__meta {
   color: var(--text-mute);
-  font-size: 0.85rem;
+  font-size: var(--jt-size-meta);
   white-space: nowrap;
 }
 @media (max-width: 540px) {
@@ -476,7 +507,8 @@ main > section.hero { max-width: none; }
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  /* 240px, so Jamie's four other sites sit in one row in the 1120px frame */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--space-4);
 }
 .family__list a {
@@ -493,8 +525,8 @@ main > section.hero { max-width: none; }
   text-decoration: none;
   transform: translateY(-1px);
 }
-.family__list strong { display: block; font-size: 1.1rem; margin-bottom: 4px; }
-.family__list span { color: var(--text-soft); font-size: 0.95rem; }
+.family__list strong { display: block; font-size: 1.25rem; margin-bottom: 4px; }
+.family__list span { color: var(--text-soft); font-size: var(--jt-size-small); }
 
 /* ----- Player ----------------------------------------------------------- */
 
@@ -539,6 +571,7 @@ main > section.hero { max-width: none; }
   color: #fff;
   border: 0;
   border-radius: 999px;
+  font-family: var(--font-ui);
   width: 40px;
   height: 40px;
   display: inline-flex;
@@ -563,14 +596,14 @@ main > section.hero { max-width: none; }
 .player__btn--rate {
   width: auto;
   padding: 0 var(--space-3);
-  font-size: 0.85rem;
+  font-size: var(--jt-size-meta);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   margin-left: auto;
 }
 .player__time {
   margin-left: auto;
-  font-size: 0.85rem;
+  font-size: var(--jt-size-meta);
   color: rgba(255, 255, 255, 0.7);
   font-variant-numeric: tabular-nums;
 }
@@ -610,21 +643,21 @@ main > section.hero { max-width: none; }
   padding: var(--space-8) var(--space-5);
 }
 .episode__eyebrow {
-  font-size: 0.85rem;
+  font-family: var(--font-label);
+  font-size: var(--jt-size-label);
   color: var(--text-mute);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--jt-tracking-label);
   font-weight: 600;
   margin-bottom: var(--space-3);
 }
 .episode__title {
   font-size: clamp(2rem, 5vw, 3.4rem);
   font-style: italic;
-  font-weight: 800;
   margin-bottom: var(--space-4);
 }
 .episode__summary {
-  font-size: 1.2rem;
+  font-size: 1.375rem;
   color: var(--text-soft);
   margin-bottom: var(--space-6);
 }
@@ -650,8 +683,8 @@ main > section.hero { max-width: none; }
   margin: 0 0 var(--space-5);
 }
 .episode__transcript-body {
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: var(--jt-size-base);
+  line-height: 1.7;
 }
 .episode__transcript-body p {
   margin-bottom: var(--space-4);
@@ -670,10 +703,11 @@ main > section.hero { max-width: none; }
   padding: var(--space-8) var(--space-5);
 }
 .eyebrow {
-  font-size: 0.85rem;
+  font-family: var(--font-label);
+  font-size: var(--jt-size-label);
   color: var(--text-mute);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--jt-tracking-label);
   font-weight: 600;
   margin-bottom: var(--space-3);
 }
@@ -681,8 +715,8 @@ main > section.hero { max-width: none; }
 /* ----- Prose ------------------------------------------------------------ */
 
 .prose {
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: var(--jt-size-base);
+  line-height: var(--jt-line-height);
   color: var(--text);
 }
 .prose h2 { margin-top: var(--space-7); }
@@ -717,8 +751,8 @@ main > section.hero { max-width: none; }
 .search-page__intro { color: var(--text-soft); margin-bottom: var(--space-6); }
 
 .search-page__box {
-  --pagefind-ui-scale: 0.9;
-  --pagefind-ui-font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pagefind-ui-scale: 1;  /* tags 14px, excerpts 16px, titles 21px */
+  --pagefind-ui-font: var(--font-ui);
   --pagefind-ui-primary: var(--accent-text);
   --pagefind-ui-text: var(--text);
   --pagefind-ui-background: var(--bg-card);
@@ -729,6 +763,8 @@ main > section.hero { max-width: none; }
   --pagefind-ui-image-border-radius: var(--radius-sm);
   --pagefind-ui-image-box-ratio: 1 / 1;
 }
+/* Pagefind's Clear and Load more are buttons, which don't inherit a font. */
+.search-page__box button { font-family: inherit; }
 
 .archive__list {
   list-style: none;
@@ -752,7 +788,7 @@ main > section.hero { max-width: none; }
   font-variant-numeric: tabular-nums;
   color: var(--text-mute);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.0625rem;  /* 17px */
   padding-top: 0.25rem;
 }
 .archive__episode-title {
@@ -763,11 +799,11 @@ main > section.hero { max-width: none; }
 .archive__summary {
   color: var(--text-soft);
   margin-bottom: var(--space-2);
-  font-size: 0.95rem;
+  font-size: 1.0625rem;  /* 17px */
 }
 .archive__meta {
   color: var(--text-mute);
-  font-size: 0.85rem;
+  font-size: var(--jt-size-meta);
   margin: 0;
 }
 
@@ -808,12 +844,12 @@ main > section.hero { max-width: none; }
 }
 .subscribe__name {
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: var(--jt-size-base);
   margin-bottom: var(--space-1);
 }
 .subscribe__hint {
   color: var(--text-mute);
-  font-size: 0.8rem;
+  font-size: var(--jt-size-label);
   word-break: break-all;
 }
 
@@ -833,7 +869,7 @@ main > section.hero { max-width: none; }
   border-top: 1px solid var(--line);
 }
 .site-footer__inner {
-  max-width: var(--container);
+  max-width: var(--container-inner);
   margin: 0 auto;
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -843,13 +879,14 @@ main > section.hero { max-width: none; }
   .site-footer__inner { grid-template-columns: 1fr; }
 }
 .site-footer__title {
-  font-weight: 800;
-  font-size: 1.05rem;
+  font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
+  font-size: 1.25rem;
   margin-bottom: var(--space-1);
 }
 .site-footer__tagline {
   color: var(--text-soft);
-  font-size: 0.95rem;
+  font-size: var(--jt-size-small);
   margin: 0;
 }
 /* Jamie's h-card (thingelstad.com/AGENTS.md, "Jamie on every site"): the
@@ -873,9 +910,10 @@ main > section.hero { max-width: none; }
   flex: none;
 }
 .site-footer__col h2 {
-  font-size: 0.8rem;
+  font-family: var(--font-label);
+  font-size: var(--jt-size-label);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--jt-tracking-label);
   color: var(--text-mute);
   margin-bottom: var(--space-3);
   font-weight: 600;
@@ -891,17 +929,19 @@ main > section.hero { max-width: none; }
 .site-footer__col a {
   color: var(--text);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: var(--jt-size-small);
 }
 .site-footer__col a:hover { color: var(--accent-text); }
 .site-footer__legal {
-  max-width: var(--container);
+  max-width: var(--container-inner);
   margin: var(--space-7) auto 0;
   padding-top: var(--space-4);
   border-top: 1px solid var(--line);
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  font-size: 0.85rem;
+  gap: var(--space-2) var(--space-5);
+  font-size: var(--jt-size-meta);
   color: var(--text-mute);
 }
 .site-footer__legal p { margin: 0; }

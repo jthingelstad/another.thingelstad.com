@@ -33,9 +33,9 @@ something this repo coordinates.
 npm install         # install deps
 npm run serve       # dev server with live reload
 npm run build       # eleventy build + pagefind search index
-npm test            # node --test (docs, sites strip, vendored sites.json)
-npm run sites:sync  # vendor ../shared/sites.json into src/_data/sites.json
-npm run sites:check # fail if the vendored sites.json is stale
+npm test            # node --test (docs, sites strip, shared type, vendored copies)
+npm run sites:sync  # vendor ../shared/ (sites.json, tokens.css, fonts/)
+npm run sites:check # fail if any vendored copy is stale
 npm run clean       # rm -rf _site
 ```
 
@@ -51,6 +51,7 @@ npm run clean       # rm -rf _site
 - **`uploads/YYYY/`** — MP3s and cover art, served at `/uploads/YYYY/` via passthrough.
 - **`lib/loadEpisodes.js`** — reads episodes, extracts MP3 duration + bytes via `music-metadata`, computes permalinks, and reads each episode's optional `.txt` transcript into `transcriptText`. Called only by `src/_data/episodes.js`.
 - **`src/_data/sites.json`** — vendored copy of `thingelstad.com/shared/sites.json`, the canonical list of Jamie's sites. Never edit it here: edit the shared file, then `npm run sites:sync` (`scripts/sync-sites.mjs`). `src/_data/site.js` `id` (`another`) is this site's id in it.
+- **`src/assets/css/shared/`** — vendored copy of `thingelstad.com/shared/tokens.css` and `shared/fonts/` (§ The shared type). Never edit it here either; `npm run sites:sync` copies it with `sites.json`.
 - **`eleventy.config.js`** — directory config, passthrough copy, and all custom filters.
 - **`_site/`** — build output, git-ignored.
 
@@ -129,6 +130,34 @@ Jamie" cards and the About page's "The family" list render from the same
 `sites.json`: every `in_sites_strip` site except this one, in file order, as
 `strip_label` with its `description`. There is no hand-kept list in
 `src/_data/site.js` any more.
+
+## The shared type
+
+The site is set in the type all of Jamie's sites share (`thingelstad.com/AGENTS.md`,
+"Shared type and colour"), moved onto it on 2026-10-22 as Weekly Thing was.
+`src/assets/css/shared/tokens.css` and its fonts are a byte-for-byte copy of
+thingelstad.com `shared/tokens.css` and `shared/fonts/`, vendored with `sites.json`
+by `npm run sites:sync` and checked by `npm run sites:check` and
+`test/shared-type.test.js`. `layouts/base.njk` preloads the two latin woff2 files
+and links `tokens.css` before `main.css`; no font host (rsms.me is gone).
+
+- Faces by role in `main.css`: `--font-heading` (Inter Tight, at `--weight-heading`,
+  800, and `--jt-tracking-heading`), `--font-body`, `--font-ui` and `--font-label`
+  (Inter), `--font-code` (the system mono). Never name a face in `main.css`; only
+  the strip does, because its values are the contract.
+- Sizes are the blog's scale: `--jt-size-base` body (19px, 18px on phones), labels
+  and eyebrows `--jt-size-label` (14px) at `--jt-tracking-label`, dates
+  `--jt-size-meta`, nav and buttons `--jt-size-ui`, blurbs and the footer
+  `--jt-size-small`. Nothing is below 14px, Pagefind included
+  (`--pagefind-ui-scale: 1`); the test fails on a smaller size.
+- The frame is `--jt-frame` (1120px) with 24px gutters inside it: blocks that pad
+  themselves take `--container`, rows inside a padded block (strip, header, hero,
+  footer) take `--container-inner`, so every edge lines up at 1072px of content.
+  The episode and page column is the blog's 720px measure.
+- The titles stay italic, Another Thing's own look. Inter Tight has no italic, so
+  the browser slants it; the italic titles get `word-spacing: 0.1em` because the
+  slanted face's narrow spaces closed up. The shared Inter has no `cv11`/`ss01`,
+  so the single-storey a and open digits that rsms.me's Inter gave are gone.
 
 ## Colours and favicon
 

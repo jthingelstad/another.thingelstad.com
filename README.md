@@ -55,9 +55,10 @@ Runs Eleventy, then builds the Pagefind search index over the output in `_site/`
 npm test
 ```
 
-Runs the `node --test` suite: the docs check, the sites strip on the built pages,
-and whether the vendored `src/_data/sites.json` still matches
-`../shared/sites.json` (skipped when that sibling folder is not checked out, as in
+Runs the `node --test` suite: the docs check, the sites strip and the shared
+type on the built pages, the type scale in `main.css` (nothing below 14px), and
+whether the vendored `src/_data/sites.json` and `src/assets/css/shared/` still
+match `../shared/` (skipped when that sibling folder is not checked out, as in
 CI).
 
 ## Architecture
@@ -68,6 +69,7 @@ CI).
 - **Transcripts inline** on each episode page, below the show notes.
 - **Pagefind** client-side search, indexed once per episode and reachable from `/search/`.
 - **Jamie's sites strip** at the top of every page, the same strip as on Jamie's other sites. It renders at build time from `src/_data/sites.json`, a vendored copy of `thingelstad.com/shared/sites.json`: edit the shared file, then run `npm run sites:sync` (and `npm run sites:check` to confirm). The markup and colours are the shared contract in `thingelstad.com/AGENTS.md`.
+- **The shared type**: Inter Tight headings and Inter text, self-hosted, on the blog's scale (19px body, nothing below 14px) and its 1120px frame. `src/assets/css/shared/` is a vendored copy of `thingelstad.com/shared/tokens.css` and its fonts, synced and checked with `sites.json`.
 - **Tinylytics** for privacy-friendly analytics, per-episode kudos buttons, visitor country flags, and a play-event custom event fired the first time each episode is played.
 - **GitHub Pages** with custom domain via `CNAME`. Deploy workflow at `.github/workflows/deploy.yml`.
 

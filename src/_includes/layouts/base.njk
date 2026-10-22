@@ -26,9 +26,13 @@
     <link rel="icon" href="/assets/images/favicon.svg?v=2" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/uploads/2025/another-thing-3000.png">
 
+    {# The type every one of Jamie's sites shares: Inter and Inter Tight,
+       self-hosted, and the --jt- tokens (assets/css/shared/, vendored from
+       thingelstad.com shared/ by npm run sites:sync). #}
+    <link rel="preload" href="/assets/css/shared/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/css/shared/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/assets/css/shared/tokens.css">
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="preload" href="https://rsms.me/inter/inter.css" as="style">
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   </head>
   <body class="{{ bodyClass }}">
     {% include "partials/sites-strip.njk" %}

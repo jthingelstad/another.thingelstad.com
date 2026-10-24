@@ -101,22 +101,22 @@ This site replaced a previous micro.blog deployment at the same domain. The foll
 
 The permalink shape is computed in `lib/loadEpisodes.js:38` (`computePermalink`). Frontmatter `guid` locks the RSS GUID independently so existing subscriptions stay valid even if a slug is later edited. Don't change the permalink structure or the GUID scheme without understanding the downstream impact on every subscriber's client.
 
-## Jamie's sites strip
+## The sites strip
 
-Every page on the base layout opens with the "Jamie's sites" strip
+Every page on the base layout opens with the sites strip
 (`src/_includes/partials/sites-strip.njk`, included first in `<body>` by
 `layouts/base.njk`, above the site header). It is the same strip as on the blog,
 Weekly Thing, Thingy and Things I've built, so its markup, class names, colours
 and sizes are the shared contract in `thingelstad.com/AGENTS.md` ("The sites
 strip"), not this site's palette; only the inner width and side padding follow
-this site's header frame. Styles: the "Jamie's sites strip" block in
+this site's header frame. Styles: the "sites strip" block in
 `src/assets/css/main.css` (dark values under `prefers-color-scheme: dark`, as for
 the rest of the site).
 
 It renders at build time from `src/_data/sites.json`: sites with
 `in_sites_strip` true, in file order; this site (`site.id`) gets
 `sites-strip__item--current` and `aria-current="true"`. Every site, this one
-included, reads as its `strip_label` ("Another Thing" here too), so the wording
+included, reads as its `strip_label` ("Podcast" here too), so the wording
 matches every other site; every link carries `?ref=sites-strip-another` so
 Tinylytics' Sources report on the destination shows the visits this strip sent.
 `test/sites-strip.test.js` builds the site in memory and pins the links and the

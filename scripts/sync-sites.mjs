@@ -1,6 +1,6 @@
 // Vendors the canonical list of Jamie's sites (thingelstad.com
 // shared/sites.json) into src/_data/sites.json, which the build renders as
-// the "Jamie's sites" strip at the top of every page
+// the sites strip at the top of every page
 // (src/_includes/partials/sites-strip.njk), and the type and colours the
 // sites share (shared/tokens.css and shared/fonts/) byte for byte into
 // src/assets/css/shared/. Mirrors thingy.thingelstad.com/web/scripts/sync-sites.mjs

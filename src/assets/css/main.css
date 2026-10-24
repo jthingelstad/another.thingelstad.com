@@ -159,7 +159,7 @@ main { display: block; }
 .dots i:nth-child(2) { opacity: 0.55; }
 .dots i:nth-child(3) { background: var(--accent-text); opacity: 1; }
 
-/* ----- Jamie's sites strip ---------------------------------------------- */
+/* ----- The sites strip -------------------------------------------------- */
 /* The same strip opens every one of Jamie's sites, so its values come from
    the shared contract (thingelstad.com/AGENTS.md, "The sites strip"), not
    from this site's palette. Only the inner width and side padding follow

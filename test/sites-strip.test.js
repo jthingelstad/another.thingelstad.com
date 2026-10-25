@@ -121,6 +121,8 @@ test("every page names Jamie with the shared h-card and carries rel=me", () => {
     assert.match(card, new RegExp(`href="${vendored.owner.url}" rel="me author"`), `${page.url}: identity link carries no ref`);
     assert.match(card, new RegExp(`<img class="u-photo" src="${vendored.owner.avatar}"`));
     assert.match(card, /<span class="p-name">Jamie Thingelstad<\/span>/);
+    // An explicit url: u-photo turns off the url mf2 would imply from the href.
+    assert.match(card, new RegExp(`<data class="u-url" value="${vendored.owner.url}"><\/data>`));
     assert.match(card, /<data class="p-note" value="[^"]+"><\/data>/);
 
     const head = page.content.match(/<head>[\s\S]*?<\/head>/)?.[0] ?? "";

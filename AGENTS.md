@@ -188,7 +188,8 @@ the sites"):
 
 - The footer's "A podcast by Jamie Thingelstad" is the shared h-card, built from
   `owner` in `sites.json`: `owner.avatar` (the bird photo) as a 28px round
-  `u-photo`, `p-name`, and `owner.note` as `p-note`. Styles sit with the footer
+  `u-photo`, `p-name`, `owner.url` as an explicit `u-url` (u-photo turns off
+  the implied one), and `owner.note` as `p-note`. Styles sit with the footer
   rules in `main.css`. `layouts/base.njk` puts a `<link rel="me">` in `<head>`
   for each `owner.rel_me`. Identity links never carry a `ref`.
 - Every template link to another strip site carries `?ref=another-<placement>`:

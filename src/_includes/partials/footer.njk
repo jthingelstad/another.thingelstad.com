@@ -3,7 +3,7 @@
     <div class="site-footer__about">
       <p class="site-footer__title">{{ site.title }}</p>
       {#- Jamie's h-card, the shared markup in thingelstad.com/AGENTS.md ("Jamie on every site"). Identity links never carry a ref. -#}
-      <p class="site-footer__tagline">A podcast by <a class="h-card" href="{{ sites.owner.url }}" rel="me author"><img class="u-photo" src="{{ sites.owner.avatar }}" alt="" width="28" height="28"><span class="p-name">{{ sites.owner.name }}</span><data class="p-note" value="{{ sites.owner.note }}"></data></a></p>
+      <p class="site-footer__tagline">A podcast by <a class="h-card" href="{{ sites.owner.url }}" rel="me author"><img class="u-photo" src="{{ sites.owner.avatar }}" alt="" width="28" height="28"><span class="p-name">{{ sites.owner.name }}</span><data class="u-url" value="{{ sites.owner.url }}"></data><data class="p-note" value="{{ sites.owner.note }}"></data></a></p>
     </div>
 
     <div class="site-footer__col">

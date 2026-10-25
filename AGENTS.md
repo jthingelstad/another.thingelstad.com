@@ -67,6 +67,7 @@ ESM project (`"type": "module"` in `package.json`). Use `import`, not `require`.
 - `xmlEscape`, `cdata` — XML output safety
 - `renderMarkdown` — markdown-it (html + linkify + typographer)
 - `paragraphs` — splits plain-text transcripts on blank lines, wraps in `<p>`
+- `cardVersion` — short hash for an episode card's `?v=` (§ Share cards)
 
 ## Adding an episode
 
@@ -202,6 +203,10 @@ the sites"):
 ## Search
 
 Pagefind indexes only elements marked `data-pagefind-body`, and the one such element is the episode `<article>` in `src/_includes/layouts/episode.njk` (transcripts render inside it, under `#transcript`, so they are indexed with their episode). The search page (`src/search.njk`, `/search/`) loads and wires up the Pagefind UI; the archive page does not. The search index is built after Eleventy in `npm run build`.
+
+## Share cards
+
+Each episode page shares its card from cards.thingelstad.com (2026-10-25; Jamie: "Weekly Thing and Another Thing issues should get custom share images with cards.thingelstad.com solution"): `layouts/base.njk` sets `og:image` to `https://cards.thingelstad.com/another/<yyyy>/<mm>/<dd>/<slug>.png?v=<hash>`, where `v` (`cardVersion`) hashes the title, date and summary. The card is white with the title and summary and Podcast in crimson; it carries no photo, since the show's art is its own. Every other page keeps the show's artwork. The card maker reads only the page, so the episode `<article>` is an h-entry: `p-name`, `dt-published`, `p-summary`, `e-content` (the notes) and `u-url`. Keep those class names (cards.thingelstad.com `src/post.mjs` reads them). `test/share-card.test.js` pins both.
 
 ## Deploy
 

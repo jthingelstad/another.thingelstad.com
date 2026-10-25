@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { DateTime } from "luxon";
 import MarkdownIt from "markdown-it";
 
@@ -43,6 +44,11 @@ export default function (eleventyConfig) {
   });
 
   // --- Date filters -------------------------------------------------------
+
+  // ?v= for an episode's share card: a short hash of what the card shows.
+  eleventyConfig.addFilter("cardVersion", (parts) =>
+    createHash("sha256").update(JSON.stringify(parts)).digest("hex").slice(0, 10),
+  );
 
   eleventyConfig.addFilter("readableDate", (value, format = "LLLL d, yyyy") => {
     return toDateTime(value).toFormat(format);

@@ -17,7 +17,13 @@
     <meta property="og:site_name" content="{{ site.title }}">
     <meta property="og:title" content="{% if title %}{{ title }}{% else %}{{ site.title }}{% endif %}">
     <meta property="og:description" content="{{ description or site.shortDescription }}">
+    {#- An episode shares its card from cards.thingelstad.com, drawn from the
+        page's h-entry; ?v= changes when its title, date or summary does. #}
+    {%- if episode and page.url == episode.permalink %}
+    <meta property="og:image" content="https://cards.thingelstad.com/another{{ episode.permalink | replace('.html', '') }}.png?v={{ [episode.title, episode.publishDate, episode.summary] | cardVersion }}">
+    {%- else %}
     <meta property="og:image" content="{{ site.url }}{{ ogImage or site.coverImage }}">
+    {%- endif %}
     <meta property="og:url" content="{{ site.url }}{{ page.url }}">
     <meta name="twitter:card" content="summary_large_image">
 

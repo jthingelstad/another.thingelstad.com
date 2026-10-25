@@ -2,20 +2,23 @@
 layout: layouts/base.njk
 ogType: article
 ---
-<article class="episode" data-pagefind-body>
+<article class="episode h-entry" data-pagefind-body>
   <header class="episode__header">
     <p class="episode__eyebrow">
       <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-      Episode {{ episode.number }} · {{ episode.publishDate | readableDate }}{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}
+      Episode {{ episode.number }} · <time class="dt-published" datetime="{{ episode.publishDate | isoDate }}">{{ episode.publishDate | readableDate }}</time>{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}
     </p>
-    <h1 class="episode__title">{{ episode.title }}</h1>
-    {% if episode.summary %}<p class="episode__summary">{{ episode.summary }}</p>{% endif %}
+    <h1 class="episode__title p-name">{{ episode.title }}</h1>
+    {#- The episode as an h-entry (IndieWeb), which the card maker
+        (cards.thingelstad.com) reads to draw its share card. #}
+    <data class="u-url" value="{{ site.url }}{{ episode.permalink }}"></data>
+    {% if episode.summary %}<p class="episode__summary p-summary">{{ episode.summary }}</p>{% endif %}
   </header>
 
   {% include "partials/player.njk" %}
 
   {% if episode.notesMarkdown %}
-    <section class="episode__notes prose">
+    <section class="episode__notes prose e-content">
       {{ episode.notesMarkdown | renderMarkdown | safe }}
     </section>
   {% endif %}

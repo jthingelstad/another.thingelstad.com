@@ -10,7 +10,9 @@
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }} podcast feed" href="{{ site.url }}/podcast.xml">
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }} RSS feed" href="{{ site.url }}/feed.xml">
     <link rel="alternate" type="text/markdown" title="LLM-friendly site index" href="{{ site.url }}/llms.txt">
-    <link rel="alternate" type="application/json" title="JSON episode index" href="{{ site.url }}/index.json">
+    {#- No alternate for index.json: it is a {show, episodes} catalog, not a
+        feed, and application/json is JSON Feed 1.0's discovery type, so a
+        reader could offer it as one. llms.txt names it. #}
     {% if episode.llmPermalink %}<link rel="alternate" type="text/markdown" title="Plain-text version of this episode" href="{{ site.url }}{{ episode.llmPermalink }}">{% endif %}
 
     <meta property="og:type" content="{% if ogType %}{{ ogType }}{% else %}website{% endif %}">
@@ -44,7 +46,9 @@
   <body class="{{ bodyClass }}">
     {% include "partials/sites-strip.njk" %}
     {% include "partials/header.njk" %}
-    <main id="main">
+    {#- mainClass lets a page make <main> a microformat root (the home page's
+        h-feed spans its latest-episode card and recent list). #}
+    <main id="main"{% if mainClass %} class="{{ mainClass }}"{% endif %}>
       {{ content | safe }}
     </main>
     {% include "partials/footer.njk" %}

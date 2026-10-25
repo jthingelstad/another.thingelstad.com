@@ -11,16 +11,18 @@ description: Every episode of Another Thing.
     <p class="archive__intro">{{ episodes.length }} episode{% if episodes.length != 1 %}s{% endif %} so far.</p>
   </header>
 
-  <ol class="archive__list">
+  {#- The list is an h-feed with an h-entry per episode (IndieWeb); the
+      episode pages are the full h-entries. #}
+  <ol class="archive__list h-feed">
     {% for episode in episodes %}
-      <li class="archive__item">
-        <a href="{{ episode.permalink }}">
+      <li class="archive__item h-entry">
+        <a class="u-url" href="{{ episode.permalink }}">
           <span class="archive__number">#{{ episode.number }}</span>
           <div class="archive__body">
-            <h2 class="archive__episode-title">{{ episode.title }}</h2>
-            {% if episode.summary %}<p class="archive__summary">{{ episode.summary }}</p>{% endif %}
+            <h2 class="archive__episode-title p-name">{{ episode.title }}</h2>
+            {% if episode.summary %}<p class="archive__summary p-summary">{{ episode.summary }}</p>{% endif %}
             <p class="archive__meta">
-              {{ episode.publishDate | readableDate }}
+              <time class="dt-published" datetime="{{ episode.publishDate | isoDate }}">{{ episode.publishDate | readableDate }}</time>
               {% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}
               {% if episode.transcriptText %} · transcript{% endif %}
             </p>

@@ -1,6 +1,10 @@
 ---
 layout: layouts/base.njk
 permalink: /index.html
+# The page is an h-feed (IndieWeb): named by the hero title, an h-entry for
+# the latest episode and each recent one. Its sections are main's children,
+# so the root is <main> itself.
+mainClass: h-feed
 eleventyComputed:
   episode: "{{ episodes[0] }}"
 ---
@@ -11,7 +15,7 @@ eleventyComputed:
     </div>
     <div class="hero__copy">
       <p class="hero__eyebrow"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> A podcast</p>
-      <h1 class="hero__title">{{ site.title }}</h1>
+      <h1 class="hero__title p-name">{{ site.title }}</h1>
       <p class="hero__tagline">{{ site.shortDescription }}</p>
       <div class="hero__actions">
         <a class="button button--primary" href="{{ episodes[0].permalink }}">Listen to the latest episode</a>
@@ -28,11 +32,11 @@ eleventyComputed:
   </div>
 
   {% set episode = episodes[0] %}
-  <article class="latest__card">
+  <article class="latest__card h-entry">
     <header>
-      <p class="card__eyebrow">Episode {{ episode.number }} · {{ episode.publishDate | readableDate }}{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}</p>
-      <h3 class="card__title"><a href="{{ episode.permalink }}">{{ episode.title }}</a></h3>
-      <p class="card__summary">{{ episode.summary }}</p>
+      <p class="card__eyebrow">Episode {{ episode.number }} · <time class="dt-published" datetime="{{ episode.publishDate | isoDate }}">{{ episode.publishDate | readableDate }}</time>{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}</p>
+      <h3 class="card__title p-name"><a class="u-url" href="{{ episode.permalink }}">{{ episode.title }}</a></h3>
+      <p class="card__summary p-summary">{{ episode.summary }}</p>
     </header>
     {% include "partials/player.njk" %}
   </article>
@@ -43,11 +47,11 @@ eleventyComputed:
   <h2 class="section-title">Recent episodes</h2>
   <ul class="episode-list">
     {% for episode in episodes.slice(1, 6) %}
-      <li class="episode-list__item">
-        <a class="episode-list__link" href="{{ episode.permalink }}">
+      <li class="episode-list__item h-entry">
+        <a class="episode-list__link u-url" href="{{ episode.permalink }}">
           <span class="episode-list__number">#{{ episode.number }}</span>
-          <span class="episode-list__title">{{ episode.title }}</span>
-          <span class="episode-list__meta">{{ episode.publishDate | readableDate("LLL d, yyyy") }}{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}</span>
+          <span class="episode-list__title p-name">{{ episode.title }}</span>
+          <span class="episode-list__meta"><time class="dt-published" datetime="{{ episode.publishDate | isoDate }}">{{ episode.publishDate | readableDate("LLL d, yyyy") }}</time>{% if episode.durationSeconds %} · {{ episode.durationSeconds | friendlyDuration }}{% endif %}</span>
         </a>
       </li>
     {% endfor %}

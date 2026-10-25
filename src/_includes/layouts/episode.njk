@@ -10,8 +10,11 @@ ogType: article
     </p>
     <h1 class="episode__title p-name">{{ episode.title }}</h1>
     {#- The episode as an h-entry (IndieWeb), which the card maker
-        (cards.thingelstad.com) reads to draw its share card. #}
+        (cards.thingelstad.com) reads to draw its share card: with its number
+        and running time (seconds) for the card's kicker and listen button. #}
     <data class="u-url" value="{{ site.url }}{{ episode.permalink }}"></data>
+    {% if episode.number %}<data class="p-episode" value="{{ episode.number }}"></data>{% endif %}
+    {% if episode.durationSeconds %}<data class="p-duration" value="{{ episode.durationSeconds | round }}"></data>{% endif %}
     {% if episode.summary %}<p class="episode__summary p-summary">{{ episode.summary }}</p>{% endif %}
   </header>
 

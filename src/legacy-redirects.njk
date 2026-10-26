@@ -1,8 +1,8 @@
 ---
 # URLs from the micro.blog deployment that no longer exist here (src/_data/legacyRedirects.js).
-# GitHub Pages has no server redirects, so each gets a stub page that refreshes to its new home and
-# names it as canonical, which Google treats as a permanent redirect. On CloudFront the same rows are
-# real 301s (src/redirects-map.11ty.js), and these stubs are never reached.
+# CloudFront answers each with a real 301 (src/redirects-map.11ty.js), so these stub pages, written
+# for GitHub Pages (which had no server redirects), are never reached; the hosting test checks the
+# map against them.
 pagination:
   data: legacyRedirects
   size: 1

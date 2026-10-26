@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Eleventy 3 site for **Another Thing**, a podcast by Jamie Thingelstad, at `another.thingelstad.com`. Deployed to GitHub Pages and, beside it until DNS moves, S3 and CloudFront (§ S3 and CloudFront).
+Eleventy 3 site for **Another Thing**, a podcast by Jamie Thingelstad, at `another.thingelstad.com`. Served from S3 behind CloudFront (§ S3 and CloudFront) since 2026-10-26; GitHub Pages served it before.
 
 ## Role in the system
 
@@ -21,7 +21,7 @@ This is the **podcast publish surface** — one of the repos that work together
   the Librarian's concern; this repo only ships the episode publicly.
 - **No live dependency.** Unlike Thingy (a live client of the Librarian
   Lambda), this is a static publishing surface — once the build deploys, the
-  feed and pages are served from GitHub Pages (CloudFront once DNS moves) with no runtime tie to the Librarian.
+  feed and pages are served from S3 and CloudFront with no runtime tie to the Librarian.
 
 If an editorial change here affects what Thingy answers about a podcast
 episode, that's the Librarian's pipeline picking it up on the next corpus build — not
@@ -48,7 +48,7 @@ npm run clean       # rm -rf _site
 - `librarian-thing` imports `content/episodes/` into its `data/podcast/another-thing/episodes/`
   for the Librarian/Thingy podcast corpus. This repo remains the publishing surface;
   corpus ownership stays with the Librarian.
-- **`uploads/YYYY/`** — the cover art, served at `/uploads/YYYY/` via passthrough, and episode 1's MP3 until the DNS cutover (Pages can serve only what is in git). Episode audio is not committed: it lives in the audio bucket at the same URL.
+- **`uploads/YYYY/`** — the cover art, served at `/uploads/YYYY/` via passthrough. Episode audio is not committed (`uploads/**/*.mp3` is git-ignored): it lives in the audio bucket at the same URL. Episode 1's MP3 left git on 2026-10-26; history keeps it.
 - **`lib/loadEpisodes.js`** — reads episodes, takes each one's audio size and running time from its front matter (`audioBytes`, `audioSeconds`; from the MP3 via `music-metadata` only when the front matter lacks them and the file is in git), computes permalinks, and reads each episode's optional `.txt` transcript into `transcriptText`. Called only by `src/_data/episodes.js`.
 - **`src/_data/sites.json`** — vendored copy of `thingelstad.com/shared/sites.json`, the canonical list of Jamie's sites. Never edit it here: edit the shared file, then `npm run sites:sync` (`scripts/sync-sites.mjs`). `src/_data/site.js` `id` (`another`) is this site's id in it.
 - **`src/assets/css/shared/`** — vendored copy of `thingelstad.com/shared/tokens.css` and `shared/fonts/` (§ The shared type). Never edit it here either; `npm run sites:sync` copies it with `sites.json`.
@@ -104,7 +104,7 @@ This site replaced a previous micro.blog deployment at the same domain. The foll
 
 The permalink shape is computed in `lib/loadEpisodes.js:38` (`computePermalink`). Frontmatter `guid` locks the RSS GUID independently so existing subscriptions stay valid even if a slug is later edited. Don't change the permalink structure or the GUID scheme without understanding the downstream impact on every subscriber's client.
 
-Other micro.blog-era URLs that Google still knows (micro.blog's `/transcripts/YYYY/MM/DD/<post id>.html` transcript pages) are rows in `src/_data/legacyRedirects.js`. On CloudFront each is a real 301 (§ S3 and CloudFront); for GitHub Pages, which has no server redirects, `src/legacy-redirects.njk` writes a stub for each: an instant meta refresh plus `rel=canonical` to the new page. Add a row when Search Console reports another 404 from the old site. The stubs carry no strip or h-card, and the page tests skip them.
+Other micro.blog-era URLs that Google still knows (micro.blog's `/transcripts/YYYY/MM/DD/<post id>.html` transcript pages) are rows in `src/_data/legacyRedirects.js`. CloudFront answers each with a real 301 (§ S3 and CloudFront). `src/legacy-redirects.njk` still writes the stub GitHub Pages needed (an instant meta refresh plus `rel=canonical` to the new page); CloudFront never reaches it, and the hosting test checks the redirect map against it. Add a row when Search Console reports another 404 from the old site. The stubs carry no strip or h-card, and the page tests skip them.
 
 ## The sites strip
 
@@ -219,12 +219,15 @@ The home page and `/archive/` are h-feeds (2026-10-25, open-web audit G10). On `
 
 ## Deploy
 
-GitHub Pages, custom domain via `CNAME` at the repo root (passthrough-copied to `_site/CNAME`). The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci`, `npm test` and `npm run build` and publishes `_site/`.
+The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci`, `npm test` and
+`npm run build`, then its `deploy` job publishes the tested build to S3 behind CloudFront
+(`npm run deploy:aws`, as the delivery role; `main` only).
 
-A second job, `deploy-aws`, publishes the same tested build to S3 behind CloudFront
-(2026-10-26; Jamie: "Approved: move another.thingelstad.com to S3 and CloudFront with real 301
-redirects, Pages kept until DNS cutover"). It runs beside Pages, so a failure there never holds up
-Pages, until `another.thingelstad.com` moves to the distribution; then Pages retires.
+The site moved from GitHub Pages on 2026-10-26 (Jamie: "Approved: move another.thingelstad.com to S3
+and CloudFront with real 301 redirects, Pages kept until DNS cutover"). Both deployed until the
+`another` CNAME moved to `dr9m1gmjoe1ul.cloudfront.net` the same evening; then the Pages job, `CNAME`
+and episode 1's MP3 left the repo. The Pages site is still enabled in the repository's settings, as
+Weekly Thing's is, serving nothing the domain reaches.
 
 ## S3 and CloudFront
 
@@ -235,7 +238,9 @@ identity** with `npm run infra -- certificate|site|delivery` (`--plan` prints th
 stops). `infra/deployment.json` records their names, tags and outputs.
 
 - `another-certificate`: the ACM certificate, validated by a CNAME at Namecheap. DNS is Jamie's to edit.
-  Keep the validation record: renewal needs it.
+  Keep the validation record: renewal needs it. The `another` record is a CNAME to the distribution's
+  `cloudfront.net` name. As for Weekly Thing, ACM checks CAA along the CNAME chain, and github.io's CAA
+  refuses Amazon, so `another` pointed at GitHub's A records while the certificate validated.
 - `another-site`: two private, versioned buckets behind one CloudFront distribution with origin access
   control. The **site bucket** holds the build (old versions kept 90 days). The **audio bucket** holds
   the episode MP3s (old versions kept a year), served by the `/uploads/*.mp3` behaviour at the URLs every
@@ -256,8 +261,8 @@ file is committed: `npm run audio:put` by hand, WT Builder's send once it does t
 from the audio bucket, and the deploy never writes to it: it refuses unless every enclosure in the built
 `podcast.xml` is there as `audio/mpeg` at the feed's `length`. A re-sent master keeps its URL
 (`audio:put --replace`); the audio is a day in browsers and a year in CloudFront, and the commit that
-carries the new `audioBytes` deploys, which clears the cache. Episode 1's MP3 stays in `uploads/` only
-while Pages serves the site; remove it from git after the cutover (history keeps it).
+carries the new `audioBytes` deploys, which clears the cache. Episode 1's MP3 was in git until the
+cutover, because Pages could serve only what the repo held; history keeps it.
 
 **Redirects are real 301s.** The build writes `_redirects.json` (`src/redirects-map.11ty.js`): every
 `legacyRedirects.js` row with and without `.html`, and every episode page without its `.html` (Pages
@@ -266,8 +271,8 @@ deploy copies it into the distribution's CloudFront key value store, and the vie
 (`infra/viewer-request.mjs`) answers those paths with a 301 that keeps the query string, placed before
 the target's `#transcript`. The same function sends a bare directory path to its slash form and serves
 `index.html` for directory URLs; the extensionless files it passes through are its `FILES` (none today).
-`test/aws-hosting.test.js` keeps the map equal to what the build writes. The stub pages stay for Pages
-and are never reached on CloudFront.
+`test/aws-hosting.test.js` keeps the map equal to what the build writes. The stub pages, written for
+Pages, are never reached on CloudFront.
 
 **Content types and caching** are set per file by `scripts/publish-plan.mjs`: both feeds go out as
 `application/rss+xml` (Pages said `application/xml`), the audio as `audio/mpeg` (Pages said

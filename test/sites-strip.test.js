@@ -18,7 +18,8 @@ async function buildPages() {
     quietMode: true,
   });
   const results = await eleventy.toJSON();
-  return results.filter((page) => page.outputPath?.endsWith(".html"));
+  // Redirect stubs for old micro.blog URLs (src/legacy-redirects.njk) are not pages.
+  return results.filter((page) => page.outputPath?.endsWith(".html") && !page.content.includes('http-equiv="refresh"'));
 }
 
 function stripOf(html) {

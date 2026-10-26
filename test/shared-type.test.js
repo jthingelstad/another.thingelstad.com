@@ -31,7 +31,8 @@ test("vendored tokens.css and fonts match the shared copy", async (t) => {
 
 test("every page loads the shared type from this site, and no font host", async () => {
   const eleventy = new Eleventy(`${root}src`, `${root}_site`, { configPath: `${root}eleventy.config.js`, quietMode: true });
-  const pages = (await eleventy.toJSON()).filter((page) => page.outputPath?.endsWith(".html"));
+  // Redirect stubs for old micro.blog URLs (src/legacy-redirects.njk) are not pages.
+  const pages = (await eleventy.toJSON()).filter((page) => page.outputPath?.endsWith(".html") && !page.content.includes('http-equiv="refresh"'));
   assert.ok(pages.length > 0);
 
   for (const page of pages) {

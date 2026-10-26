@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Eleventy 3 site for **Another Thing**, a podcast by Jamie Thingelstad. Deployed to GitHub Pages via `CNAME` → `another.thingelstad.com`.
+Eleventy 3 site for **Another Thing**, a podcast by Jamie Thingelstad, at `another.thingelstad.com`. Deployed to GitHub Pages and, beside it until DNS moves, S3 and CloudFront (§ S3 and CloudFront).
 
 ## Role in the system
 
@@ -8,8 +8,8 @@ This is the **podcast publish surface** — one of the repos that work together
 (see `librarian-thing/ALIGNMENT.md` for the full map — renamed from
 `studio-thing` 2026-08-28). Specifically:
 
-- **This repo owns publishing.** Episodes live in `content/episodes/`, audio in
-  `uploads/`, and the site builds the RSS feed (`/podcast.xml`) that
+- **This repo owns publishing.** Episodes live in `content/episodes/`, their
+  audio in the site stack's audio bucket (§ S3 and CloudFront), and the site builds the RSS feed (`/podcast.xml`) that
   directories poll. (WT Builder makes Another Thing since 2026-10-11
   (`/another`, which replaced `at-builder`) and commits each episode here in
   one send; that send has not run yet, so episodes so far were added by hand
@@ -21,7 +21,7 @@ This is the **podcast publish surface** — one of the repos that work together
   the Librarian's concern; this repo only ships the episode publicly.
 - **No live dependency.** Unlike Thingy (a live client of the Librarian
   Lambda), this is a static publishing surface — once the build deploys, the
-  feed and pages are served from GitHub Pages with no runtime tie to the Librarian.
+  feed and pages are served from GitHub Pages (CloudFront once DNS moves) with no runtime tie to the Librarian.
 
 If an editorial change here affects what Thingy answers about a podcast
 episode, that's the Librarian's pipeline picking it up on the next corpus build — not
@@ -48,8 +48,8 @@ npm run clean       # rm -rf _site
 - `librarian-thing` imports `content/episodes/` into its `data/podcast/another-thing/episodes/`
   for the Librarian/Thingy podcast corpus. This repo remains the publishing surface;
   corpus ownership stays with the Librarian.
-- **`uploads/YYYY/`** — MP3s and cover art, served at `/uploads/YYYY/` via passthrough.
-- **`lib/loadEpisodes.js`** — reads episodes, extracts MP3 duration + bytes via `music-metadata`, computes permalinks, and reads each episode's optional `.txt` transcript into `transcriptText`. Called only by `src/_data/episodes.js`.
+- **`uploads/YYYY/`** — the cover art, served at `/uploads/YYYY/` via passthrough, and episode 1's MP3 until the DNS cutover (Pages can serve only what is in git). Episode audio is not committed: it lives in the audio bucket at the same URL.
+- **`lib/loadEpisodes.js`** — reads episodes, takes each one's audio size and running time from its front matter (`audioBytes`, `audioSeconds`; from the MP3 via `music-metadata` only when the front matter lacks them and the file is in git), computes permalinks, and reads each episode's optional `.txt` transcript into `transcriptText`. Called only by `src/_data/episodes.js`.
 - **`src/_data/sites.json`** — vendored copy of `thingelstad.com/shared/sites.json`, the canonical list of Jamie's sites. Never edit it here: edit the shared file, then `npm run sites:sync` (`scripts/sync-sites.mjs`). `src/_data/site.js` `id` (`another`) is this site's id in it.
 - **`src/assets/css/shared/`** — vendored copy of `thingelstad.com/shared/tokens.css` and `shared/fonts/` (§ The shared type). Never edit it here either; `npm run sites:sync` copies it with `sites.json`.
 - **`eleventy.config.js`** — directory config, passthrough copy, and all custom filters.
@@ -71,7 +71,7 @@ ESM project (`"type": "module"` in `package.json`). Use `import`, not `require`.
 
 ## Adding an episode
 
-1. Drop `another-thing-N.mp3` into `uploads/YYYY/`.
+1. Put `another-thing-N.mp3` in the audio bucket: place it at `uploads/YYYY/another-thing-N.mp3` (git-ignored), then `npm run audio:put -- uploads/YYYY/another-thing-N.mp3` as the cloud-engineer identity. It prints the two `audio*` lines for the front matter. WT Builder's send will do this for the episodes it publishes.
 2. Create `content/episodes/00N-slug.md` with this frontmatter shape:
    ```yaml
    ---
@@ -80,6 +80,8 @@ ESM project (`"type": "module"` in `package.json`). Use `import`, not `require`.
    slug: ...            # permalink slug (no episode number prefix)
    date: 2025-10-05T18:48:44-05:00
    audio: /uploads/YYYY/another-thing-N.mp3
+   audioBytes: 13237856        # from audio:put (or WT Builder)
+   audioSeconds: 635.352       # decimal seconds, same source
    transcript: 00N-slug.txt    # optional, sibling path
    summary: ...
    guid: https://another.thingelstad.com/YYYY/MM/DD/slug.html
@@ -87,7 +89,7 @@ ESM project (`"type": "module"` in `package.json`). Use `import`, not `require`.
    ---
    ```
 3. Optionally drop a `.txt` transcript alongside the markdown (plain text, paragraphs separated by blank lines — the `paragraphs` filter handles the rest).
-4. Duration, file size, and MIME type are read from the MP3 at build time. Do not hand-enter them.
+4. `audioBytes` and `audioSeconds` are the record the feed's `length` and `itunes:duration` come from; copy them from what `audio:put` prints, never estimate them. A build fails on an episode with audio and neither the two fields nor the file in git, and the AWS deploy refuses a feed whose enclosure is not in the audio bucket at that length.
 
 `lib/loadEpisodes.js:12` is a **minimal custom frontmatter parser** — intentional, to avoid a YAML dep for a handful of fields. Do not swap it for `gray-matter` without reason. If you add a frontmatter field, extend that parser.
 
@@ -102,7 +104,7 @@ This site replaced a previous micro.blog deployment at the same domain. The foll
 
 The permalink shape is computed in `lib/loadEpisodes.js:38` (`computePermalink`). Frontmatter `guid` locks the RSS GUID independently so existing subscriptions stay valid even if a slug is later edited. Don't change the permalink structure or the GUID scheme without understanding the downstream impact on every subscriber's client.
 
-Other micro.blog-era URLs that Google still knows (micro.blog's `/transcripts/YYYY/MM/DD/<post id>.html` transcript pages) get a stub in `src/legacy-redirects.njk`: an instant meta refresh plus `rel=canonical` to the new page, since GitHub Pages has no server redirects. Add a row there when Search Console reports another 404 from the old site. The stubs carry no strip or h-card, and the page tests skip them.
+Other micro.blog-era URLs that Google still knows (micro.blog's `/transcripts/YYYY/MM/DD/<post id>.html` transcript pages) are rows in `src/_data/legacyRedirects.js`. On CloudFront each is a real 301 (§ S3 and CloudFront); for GitHub Pages, which has no server redirects, `src/legacy-redirects.njk` writes a stub for each: an instant meta refresh plus `rel=canonical` to the new page. Add a row when Search Console reports another 404 from the old site. The stubs carry no strip or h-card, and the page tests skip them.
 
 ## The sites strip
 
@@ -218,3 +220,64 @@ The home page and `/archive/` are h-feeds (2026-10-25, open-web audit G10). On `
 ## Deploy
 
 GitHub Pages, custom domain via `CNAME` at the repo root (passthrough-copied to `_site/CNAME`). The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci`, `npm test` and `npm run build` and publishes `_site/`.
+
+A second job, `deploy-aws`, publishes the same tested build to S3 behind CloudFront
+(2026-10-26; Jamie: "Approved: move another.thingelstad.com to S3 and CloudFront with real 301
+redirects, Pages kept until DNS cutover"). It runs beside Pages, so a failure there never holds up
+Pages, until `another.thingelstad.com` moves to the distribution; then Pages retires.
+
+## S3 and CloudFront
+
+The same shape as Weekly Thing's (weekly.thingelstad.com `AGENTS.md`, "S3 and CloudFront"), plus the
+audio. Three stacks, generated by `infra/templates.mjs` into `infra/generated/` (`npm run infra:generate`;
+a test fails when the committed JSON is stale) and deployed **from this Mac as the cloud-engineer
+identity** with `npm run infra -- certificate|site|delivery` (`--plan` prints the change set and
+stops). `infra/deployment.json` records their names, tags and outputs.
+
+- `another-certificate`: the ACM certificate, validated by a CNAME at Namecheap. DNS is Jamie's to edit.
+  Keep the validation record: renewal needs it.
+- `another-site`: two private, versioned buckets behind one CloudFront distribution with origin access
+  control. The **site bucket** holds the build (old versions kept 90 days). The **audio bucket** holds
+  the episode MP3s (old versions kept a year), served by the `/uploads/*.mp3` behaviour at the URLs every
+  subscriber's client holds, uncompressed, with byte ranges as podcast clients ask. AWS's
+  CachingOptimized policy (no query string in the key); security headers plus
+  `Access-Control-Allow-Origin: *` as Pages sent (for an `Origin` request, which is when a browser
+  reads it), with `Content-Range` exposed for web players; 403/404 serve `/404.html`; a 5xx alarm to
+  `weekly-thing-librarian-alarms`. The alias and certificate attach only once the certificate is ISSUED
+  (rerun `npm run infra -- site`).
+- `another-delivery`: the role GitHub Actions assumes (`vars.AWS_DEPLOY_ROLE_ARN`), `main` only. It can
+  publish into the site bucket, update the redirect store and clear the cache, and only read the audio
+  bucket; it cannot change the stacks.
+
+**The audio is not in git** (Jamie, 2026-10-26: "Not great for the audio files to be in git -- we can
+and should change that to be more AWS proper"; the bucket at the same URLs was Jamie's pick over moving
+it to files.thingelstad.com). An MP3 goes into the audio bucket once per episode, before its episode
+file is committed: `npm run audio:put` by hand, WT Builder's send once it does the same. Nothing deletes
+from the audio bucket, and the deploy never writes to it: it refuses unless every enclosure in the built
+`podcast.xml` is there as `audio/mpeg` at the feed's `length`. A re-sent master keeps its URL
+(`audio:put --replace`); the audio is a day in browsers and a year in CloudFront, and the commit that
+carries the new `audioBytes` deploys, which clears the cache. Episode 1's MP3 stays in `uploads/` only
+while Pages serves the site; remove it from git after the cutover (history keeps it).
+
+**Redirects are real 301s.** The build writes `_redirects.json` (`src/redirects-map.11ty.js`): every
+`legacyRedirects.js` row with and without `.html`, and every episode page without its `.html` (Pages
+served `/2025/10/05/how-do-you-start-a` as the page itself; here it is a 301 to the `.html`). Each
+deploy copies it into the distribution's CloudFront key value store, and the viewer-request function
+(`infra/viewer-request.mjs`) answers those paths with a 301 that keeps the query string, placed before
+the target's `#transcript`. The same function sends a bare directory path to its slash form and serves
+`index.html` for directory URLs; the extensionless files it passes through are its `FILES` (none today).
+`test/aws-hosting.test.js` keeps the map equal to what the build writes. The stub pages stay for Pages
+and are never reached on CloudFront.
+
+**Content types and caching** are set per file by `scripts/publish-plan.mjs`: both feeds go out as
+`application/rss+xml` (Pages said `application/xml`), the audio as `audio/mpeg` (Pages said
+`audio/mp3`, which the feed's enclosure contradicted), Pagefind's index as bytes. Pages are five minutes
+in browsers and a day in CloudFront; fonts and images a week.
+
+`npm run deploy:aws` (`scripts/deploy-aws.mjs`) refuses unless the site stack's live template equals
+`infra/generated/site.json`, so infrastructure goes out first, on its own. It checks the enclosures,
+uploads the files whose MD5 changed (`--all` re-uploads everything, needed after a `publish-plan.mjs`
+change), syncs the redirect store, deletes what the build no longer writes, clears the cache, and reads
+the result back through the CloudFront domain (the front page as built, the feed's type, the first two
+bytes of an episode as a 206, a micro.blog redirect, an episode without `.html`, the slash form, a 404).
+Tinylytics refuses the `cloudfront.net` host, so analytics only count on the real domain.

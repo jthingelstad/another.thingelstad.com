@@ -4,6 +4,8 @@ number: 1
 slug: how-do-you-start-a
 date: 2025-10-05T18:48:44-05:00
 audio: /uploads/2025/another-thing-1.mp3
+audioBytes: 13237856
+audioSeconds: 635.352
 transcript: 001-how-do-you-start-a-podcast.txt
 summary: Stepping into podcasting and trying my hand at something new.
 guid: https://another.thingelstad.com/2025/10/05/how-do-you-start-a.html

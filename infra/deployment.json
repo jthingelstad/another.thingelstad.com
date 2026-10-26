@@ -1,0 +1,24 @@
+{
+  "account": "999153317627",
+  "region": "us-east-1",
+  "domain": "another.thingelstad.com",
+  "stacks": {
+    "certificate": "another-certificate",
+    "site": "another-site",
+    "delivery": "another-delivery"
+  },
+  "stackTags": {
+    "Application": "Thingelstad",
+    "Project": "another",
+    "Repository": "jthingelstad/another.thingelstad.com",
+    "ManagedBy": "cloudformation",
+    "Environment": "production"
+  },
+  "certificateArn": "arn:aws:acm:us-east-1:999153317627:certificate/3b1f6b0c-d95a-4380-8df8-7c8758a554b5",
+  "siteBucket": "another-site-sitebucket-2159ixxumtzd",
+  "audioBucket": "another-site-audiobucket-fjuvh89lopyc",
+  "distributionId": "E1CVJE2BDUIN1U",
+  "cloudfrontDomain": "dr9m1gmjoe1ul.cloudfront.net",
+  "redirectStoreArn": "arn:aws:cloudfront::999153317627:key-value-store/d106a643-ea83-4141-adf6-dcb982e865a9",
+  "deploymentRoleArn": "arn:aws:iam::999153317627:role/another-delivery-DeploymentRole-MqFYwR1djEVW"
+}

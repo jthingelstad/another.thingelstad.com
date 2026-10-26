@@ -1,10 +1,10 @@
 # another.thingelstad.com
 
-The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Eleventy](https://www.11ty.dev/) and deployed to GitHub Pages.
+The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Eleventy](https://www.11ty.dev/) and deployed to GitHub Pages, moving to S3 + CloudFront (both deploy until the DNS cutover; see `AGENTS.md`).
 
 ## Adding a new episode
 
-1. Drop the MP3 into `uploads/YYYY/`.
+1. Put the MP3 in the audio bucket: `npm run audio:put -- uploads/YYYY/another-thing-N.mp3` (the file is not committed). It prints `audioBytes` and `audioSeconds` for the frontmatter.
 2. Create one markdown file in `content/episodes/`, named like `00N-slug.md`:
 
    ```markdown
@@ -14,6 +14,8 @@ The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Elev
    slug: how-do-you-start-a
    date: 2025-10-05T18:48:44-05:00
    audio: /uploads/2025/another-thing-1.mp3
+   audioBytes: 13237856
+   audioSeconds: 635.352
    transcript: 001-how-do-you-start-a-podcast.txt
    summary: Stepping into podcasting and trying my hand at something new.
    guid: https://another.thingelstad.com/2025/10/05/how-do-you-start-a.html
@@ -24,9 +26,9 @@ The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Elev
    ```
 
 3. Optionally drop a transcript text file alongside the markdown (referenced by `transcript:` in the frontmatter). Paragraphs are separated by blank lines.
-4. Commit and push. GitHub Actions builds and deploys to Pages.
+4. Commit and push. GitHub Actions builds and deploys to Pages and to S3 + CloudFront.
 
-Duration and file size are read from the MP3 automatically at build time. The episode's permalink is computed from the publish date and slug (`/YYYY/MM/DD/slug.html`); the `guid` frontmatter field locks the RSS GUID independently so subscriptions stay valid even if a slug is later edited.
+Duration and file size come from `audioBytes` and `audioSeconds`, as `audio:put` prints them. The episode's permalink is computed from the publish date and slug (`/YYYY/MM/DD/slug.html`); the `guid` frontmatter field locks the RSS GUID independently so subscriptions stay valid even if a slug is later edited.
 
 `librarian-thing` imports these episode markdown/transcript files into
 `data/podcast/another-thing/episodes/` for the Librarian podcast corpus.
@@ -65,13 +67,13 @@ CI).
 
 - **Eleventy 3** with Nunjucks templates; ESM project (`"type": "module"`).
 - **Node 24** for local builds and GitHub Pages deploys.
-- **Markdown-per-episode**, one file in `content/episodes/`, with auto-derived audio metadata via `music-metadata`. No central JSON database.
+- **Markdown-per-episode**, one file in `content/episodes/`, with the audio's size and running time in its frontmatter (the MP3 lives in S3, not git). No central JSON database.
 - **Transcripts inline** on each episode page, below the show notes.
 - **Pagefind** client-side search, indexed once per episode and reachable from `/search/`.
 - **The sites strip** at the top of every page, the same strip as on Jamie's other sites. It renders at build time from `src/_data/sites.json`, a vendored copy of `thingelstad.com/shared/sites.json`: edit the shared file, then run `npm run sites:sync` (and `npm run sites:check` to confirm). The markup and colours are the shared contract in `thingelstad.com/AGENTS.md`.
 - **The shared type**: Inter Tight headings and Inter text, self-hosted, on the blog's scale (19px body, nothing below 14px) and its 1120px frame. `src/assets/css/shared/` is a vendored copy of `thingelstad.com/shared/tokens.css` and its fonts, synced and checked with `sites.json`.
 - **Tinylytics** for privacy-friendly analytics, per-episode kudos buttons, visitor country flags, and a play-event custom event fired the first time each episode is played.
-- **GitHub Pages** with custom domain via `CNAME`. Deploy workflow at `.github/workflows/deploy.yml`.
+- **GitHub Pages** with custom domain via `CNAME`, and **S3 + CloudFront** beside it until DNS moves (`infra/`). Deploy workflow at `.github/workflows/deploy.yml`.
 
 ## Feeds and machine-readable indexes
 
@@ -101,4 +103,4 @@ Permalink shape and GUID handling live in `lib/loadEpisodes.js`.
 
 ## Deploy
 
-Pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci`, `npm test` and `npm run build` and publishes `_site/` to GitHub Pages. The custom domain is set via the `CNAME` file at the repo root.
+Pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci`, `npm test` and `npm run build` and publishes `_site/` to GitHub Pages. The custom domain is set via the `CNAME` file at the repo root. A `deploy-aws` job publishes the same build to S3 + CloudFront (`npm run deploy:aws`).

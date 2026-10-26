@@ -1,13 +1,10 @@
 ---
-# URLs from the micro.blog deployment that no longer exist here. GitHub Pages
-# has no server redirects, so each gets a stub page that refreshes to its new
-# home and names it as canonical, which Google treats as a permanent redirect.
-redirects:
-  - from: /transcripts/2025/10/05/2437.html
-    to: /2025/10/05/how-do-you-start-a.html
-    anchor: "#transcript"
+# URLs from the micro.blog deployment that no longer exist here (src/_data/legacyRedirects.js).
+# GitHub Pages has no server redirects, so each gets a stub page that refreshes to its new home and
+# names it as canonical, which Google treats as a permanent redirect. On CloudFront the same rows are
+# real 301s (src/redirects-map.11ty.js), and these stubs are never reached.
 pagination:
-  data: redirects
+  data: legacyRedirects
   size: 1
   alias: redirect
 permalink: "{{ redirect.from }}"

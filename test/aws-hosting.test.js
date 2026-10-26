@@ -76,7 +76,7 @@ test("pages are short in browsers; the audio is a day there and a year in CloudF
   assert.equal(cacheControlFor("uploads/2025/another-thing-1.mp3"), "public, max-age=86400, s-maxage=31536000");
 });
 
-test("every episode's front matter carries its audio's size and running time, equal to an MP3 still in git", async () => {
+test("every episode's front matter carries its audio's size and running time, equal to an MP3 on disk", async () => {
   const raw = await readFile(new URL("../content/episodes/001-how-do-you-start-a-podcast.md", import.meta.url), "utf8");
   assert.match(raw, /^audioBytes: \d+$/m);
   assert.match(raw, /^audioSeconds: [\d.]+$/m);

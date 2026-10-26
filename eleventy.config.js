@@ -31,7 +31,6 @@ export default function (eleventyConfig) {
   // Static assets
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy({ uploads: "uploads" });
-  eleventyConfig.addPassthroughCopy({ CNAME: "CNAME" });
 
   // Let Eleventy treat .txt templates (robots.txt) as pass-through templates
   // so the frontmatter-driven permalink is honored without a template engine.

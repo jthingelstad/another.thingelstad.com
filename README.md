@@ -1,6 +1,6 @@
 # another.thingelstad.com
 
-The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Eleventy](https://www.11ty.dev/) and deployed to GitHub Pages, moving to S3 + CloudFront (both deploy until the DNS cutover; see `AGENTS.md`).
+The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Eleventy](https://www.11ty.dev/) and served from S3 + CloudFront (see `AGENTS.md`).
 
 ## Adding a new episode
 
@@ -26,7 +26,7 @@ The home for **Another Thing**, a podcast by Jamie Thingelstad. Built with [Elev
    ```
 
 3. Optionally drop a transcript text file alongside the markdown (referenced by `transcript:` in the frontmatter). Paragraphs are separated by blank lines.
-4. Commit and push. GitHub Actions builds and deploys to Pages and to S3 + CloudFront.
+4. Commit and push. GitHub Actions builds and deploys to S3 + CloudFront.
 
 Duration and file size come from `audioBytes` and `audioSeconds`, as `audio:put` prints them. The episode's permalink is computed from the publish date and slug (`/YYYY/MM/DD/slug.html`); the `guid` frontmatter field locks the RSS GUID independently so subscriptions stay valid even if a slug is later edited.
 
@@ -66,14 +66,14 @@ CI).
 ## Architecture
 
 - **Eleventy 3** with Nunjucks templates; ESM project (`"type": "module"`).
-- **Node 24** for local builds and GitHub Pages deploys.
+- **Node 24** for local builds and deploys.
 - **Markdown-per-episode**, one file in `content/episodes/`, with the audio's size and running time in its frontmatter (the MP3 lives in S3, not git). No central JSON database.
 - **Transcripts inline** on each episode page, below the show notes.
 - **Pagefind** client-side search, indexed once per episode and reachable from `/search/`.
 - **The sites strip** at the top of every page, the same strip as on Jamie's other sites. It renders at build time from `src/_data/sites.json`, a vendored copy of `thingelstad.com/shared/sites.json`: edit the shared file, then run `npm run sites:sync` (and `npm run sites:check` to confirm). The markup and colours are the shared contract in `thingelstad.com/AGENTS.md`.
 - **The shared type**: Inter Tight headings and Inter text, self-hosted, on the blog's scale (19px body, nothing below 14px) and its 1120px frame. `src/assets/css/shared/` is a vendored copy of `thingelstad.com/shared/tokens.css` and its fonts, synced and checked with `sites.json`.
 - **Tinylytics** for privacy-friendly analytics, per-episode kudos buttons, visitor country flags, and a play-event custom event fired the first time each episode is played.
-- **GitHub Pages** with custom domain via `CNAME`, and **S3 + CloudFront** beside it until DNS moves (`infra/`). Deploy workflow at `.github/workflows/deploy.yml`.
+- **S3 + CloudFront** (`infra/`), with the episode audio in its own bucket at the same URLs. GitHub Pages served the site until 2026-10-26. Deploy workflow at `.github/workflows/deploy.yml`.
 
 ## Feeds and machine-readable indexes
 
@@ -103,4 +103,4 @@ Permalink shape and GUID handling live in `lib/loadEpisodes.js`.
 
 ## Deploy
 
-Pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci`, `npm test` and `npm run build` and publishes `_site/` to GitHub Pages. The custom domain is set via the `CNAME` file at the repo root. A `deploy-aws` job publishes the same build to S3 + CloudFront (`npm run deploy:aws`).
+Pushes to `main` trigger `.github/workflows/deploy.yml`, which runs `npm ci`, `npm test` and `npm run build` and publishes `_site/` to S3 + CloudFront (`npm run deploy:aws`).

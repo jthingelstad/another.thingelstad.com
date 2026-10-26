@@ -28,5 +28,4 @@ yarn-error.log*
 .eleventy.cache/
 
 # Episode audio lives in the audio bucket (AGENTS.md, "S3 and CloudFront"), not git.
-# Episode 1 stays tracked until the DNS cutover.
 uploads/**/*.mp3

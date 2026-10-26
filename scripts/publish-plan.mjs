@@ -4,10 +4,11 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { extname, join, relative, sep } from 'node:path';
 
-// Pages-only files, and the redirect map, which goes to the key value store instead.
+// Files only GitHub Pages read (the site left Pages on 2026-10-26), and the redirect map, which goes to
+// the key value store instead.
 export const NOT_PUBLISHED = new Set(['CNAME', '.nojekyll', '_redirects.json']);
 // The episode audio is served from the audio bucket (infra/templates.mjs AUDIO_PATH), never from the
-// build: an MP3 still in git until the DNS cutover is left out here.
+// build: an MP3 a send still commits, or one sitting in uploads/ on this Mac, is left out here.
 export const isAudio = (key) => /^uploads\/.*\.mp3$/i.test(key);
 
 const TYPES = {

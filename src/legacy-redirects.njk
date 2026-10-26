@@ -1,0 +1,28 @@
+---
+# URLs from the micro.blog deployment that no longer exist here. GitHub Pages
+# has no server redirects, so each gets a stub page that refreshes to its new
+# home and names it as canonical, which Google treats as a permanent redirect.
+redirects:
+  - from: /transcripts/2025/10/05/2437.html
+    to: /2025/10/05/how-do-you-start-a.html
+    anchor: "#transcript"
+pagination:
+  data: redirects
+  size: 1
+  alias: redirect
+permalink: "{{ redirect.from }}"
+eleventyExcludeFromCollections: true
+---
+{%- set target = site.url + redirect.to + (redirect.anchor or "") -%}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moved</title>
+<link rel="canonical" href="{{ site.url }}{{ redirect.to }}">
+<meta http-equiv="refresh" content="0; url={{ target }}">
+</head>
+<body>
+<p>This page moved to <a href="{{ target }}">{{ target }}</a>.</p>
+</body>
+</html>

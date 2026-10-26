@@ -21,7 +21,8 @@ async function build({ config } = {}) {
 
 const episodes = await loadEpisodes();
 const pages = await build();
-const html = pages.filter((page) => page.outputPath?.endsWith(".html"));
+// Redirect stubs for old micro.blog URLs (src/legacy-redirects.njk) are not pages.
+const html = pages.filter((page) => page.outputPath?.endsWith(".html") && !page.content.includes('http-equiv="refresh"'));
 const pageAt = (url) => html.find((page) => page.url === url);
 
 const iso = (episode) => episode.publishDate.toISOString();

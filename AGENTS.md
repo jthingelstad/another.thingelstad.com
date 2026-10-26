@@ -102,6 +102,8 @@ This site replaced a previous micro.blog deployment at the same domain. The foll
 
 The permalink shape is computed in `lib/loadEpisodes.js:38` (`computePermalink`). Frontmatter `guid` locks the RSS GUID independently so existing subscriptions stay valid even if a slug is later edited. Don't change the permalink structure or the GUID scheme without understanding the downstream impact on every subscriber's client.
 
+Other micro.blog-era URLs that Google still knows (micro.blog's `/transcripts/YYYY/MM/DD/<post id>.html` transcript pages) get a stub in `src/legacy-redirects.njk`: an instant meta refresh plus `rel=canonical` to the new page, since GitHub Pages has no server redirects. Add a row there when Search Console reports another 404 from the old site. The stubs carry no strip or h-card, and the page tests skip them.
+
 ## The sites strip
 
 Every page on the base layout opens with the sites strip

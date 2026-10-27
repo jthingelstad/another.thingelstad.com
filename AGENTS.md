@@ -226,8 +226,9 @@ The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci`, `np
 The site moved from GitHub Pages on 2026-10-26 (Jamie: "Approved: move another.thingelstad.com to S3
 and CloudFront with real 301 redirects, Pages kept until DNS cutover"). Both deployed until the
 `another` CNAME moved to `dr9m1gmjoe1ul.cloudfront.net` the same evening; then the Pages job, `CNAME`
-and episode 1's MP3 left the repo. The Pages site is still enabled in the repository's settings, as
-Weekly Thing's is, serving nothing the domain reaches.
+and episode 1's MP3 left the repo. Jamie unpublished the Pages site the same evening, as Weekly
+Thing's; GitHub keeps only its settings, and `jthingelstad.github.io/another.thingelstad.com/` is a 301
+to the domain.
 
 ## S3 and CloudFront
 

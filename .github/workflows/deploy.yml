@@ -71,3 +71,5 @@ jobs:
 
       - name: Publish to S3 and CloudFront
         run: npm run deploy:aws
+        env:
+          SYNC_RECEIVED_BUS: ${{ vars.SYNC_RECEIVED_BUS }}

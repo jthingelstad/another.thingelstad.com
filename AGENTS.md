@@ -219,6 +219,14 @@ The home page and `/archive/` are h-feeds (2026-10-25, open-web audit G10). On `
 
 ## Deploy
 
+`scripts/arrival.mjs` optionally reports a new episode to the publishing bus
+after the healthy public deployment and a matching `/index.json` read-back.
+It compares a known earlier episode; unknown baselines, unchanged builds and
+regressions report nothing. The repository variable `SYNC_RECEIVED_BUS`
+starts empty. Apply the sync stack's reviewed, source-scoped delivery-role
+grant before enabling it. A reporting failure warns; polling is the backstop.
+No activity, subscriber, transcript or body enters the receipt.
+
 The GitHub Actions workflow at `.github/workflows/deploy.yml` runs `npm ci`, `npm test` and
 `npm run build`, then its `deploy` job publishes the tested build to S3 behind CloudFront
 (`npm run deploy:aws`, as the delivery role; `main` only).

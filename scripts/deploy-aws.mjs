@@ -22,6 +22,7 @@ import { isDeepStrictEqual } from 'node:util';
 import { setTimeout as delay } from 'node:timers/promises';
 import { enclosuresOf, publishPlan } from './publish-plan.mjs';
 import site from '../src/_data/site.js';
+import { announceEpisode, publicCatalog } from './arrival.mjs';
 
 const ROOT = '_site';
 const deployment = JSON.parse(readFileSync('infra/deployment.json', 'utf8'));
@@ -44,6 +45,8 @@ const out = Object.fromEntries(stack.Outputs.map((o) => [o.OutputKey, o.OutputVa
 const bucket = out.SiteBucket;
 const audioBucket = out.AudioBucket;
 const preview = `https://${out.CloudFrontDomain}`;
+const receiptBus = process.env.SYNC_RECEIVED_BUS;
+const previousCatalog = receiptBus ? await publicCatalog(`${preview}/index.json`) : null;
 
 // A build missing its core files is not published.
 const plan = publishPlan(ROOT);
@@ -211,3 +214,9 @@ for (let attempt = 0; attempt < 8; attempt++) {
 }
 if (failures.length) throw new Error(`Published site check failed: ${failures.join('; ')}`);
 console.log(`Verified ${process.env.GITHUB_SHA ?? 'local build'} at ${preview}`);
+if (receiptBus) {
+  try {
+    const expected = JSON.parse(readFileSync(`${ROOT}/index.json`, 'utf8'));
+    console.log(`Sync receipt: ${await announceEpisode({ busName: receiptBus, region, previous: previousCatalog, expected, origin: preview })}`);
+  } catch { console.warn('::warning::The episode catalog could not be verified for sync; the site is deployed.'); }
+}

@@ -7,13 +7,12 @@ eleventyExcludeFromCollections: true
   {#- Every <lastmod> is when what the page shows last changed (2026-10-28):
       an episode's publish date or the last commit to its notes or
       transcript; a hand-written page's last source commit (_data/edited.js)
-      or, where it lists episodes, the newest episode's date. Never the build
+      or, where it lists episodes, the newest change among those it shows. Never the build
       time; test/sitemap.test.js pins it. -#}
   {%- macro lastmod(dates) -%}{%- set d = dates | latestDate -%}{%- if d %}<lastmod>{{ d }}</lastmod>{% endif -%}{%- endmacro -%}
-  {%- set latest = episodes[0] -%}
-  {%- set newestEpisode = [latest.publishDate, edited.episodes[latest.id]] if latest else [] %}
-  <url><loc>{{ site.url }}/</loc>{{ lastmod([edited.pages['/'], newestEpisode]) }}</url>
-  <url><loc>{{ site.url }}/archive/</loc>{{ lastmod([edited.pages['/archive/'], newestEpisode]) }}</url>
+  {#- The home page shows the newest six episodes; the archive all of them. #}
+  <url><loc>{{ site.url }}/</loc>{{ lastmod([edited.pages['/'], episodes.slice(0, 6) | episodesLatestDate(edited.episodes)]) }}</url>
+  <url><loc>{{ site.url }}/archive/</loc>{{ lastmod([edited.pages['/archive/'], episodes | episodesLatestDate(edited.episodes)]) }}</url>
   <url><loc>{{ site.url }}/search/</loc>{{ lastmod([edited.pages['/search/']]) }}</url>
   <url><loc>{{ site.url }}/about/</loc>{{ lastmod([edited.pages['/about/']]) }}</url>
   <url><loc>{{ site.url }}/subscribe/</loc>{{ lastmod([edited.pages['/subscribe/']]) }}</url>

@@ -72,6 +72,14 @@ export default function (eleventyConfig) {
     return times.length ? new Date(Math.max(...times)).toISOString() : "";
   });
 
+  // The newest change among the episodes a listing shows: each one's date or
+  // the last commit to its notes or transcript (edited.episodes, by id). A
+  // listing renders every episode's title and summary, so an edit to any of
+  // them changes the page.
+  eleventyConfig.addFilter("episodesLatestDate", (episodes, editedEpisodes = {}) =>
+    eleventyConfig.getFilter("latestDate")((episodes || []).map((episode) => [episode.publishDate, editedEpisodes[episode.id]])),
+  );
+
   eleventyConfig.addFilter("rfc822Date", (value) => {
     return toDateTime(value).toFormat("EEE, dd LLL yyyy HH:mm:ss 'GMT'");
   });

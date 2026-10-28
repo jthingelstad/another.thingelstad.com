@@ -296,3 +296,13 @@ change), syncs the redirect store, deletes what the build no longer writes, clea
 the result back through the CloudFront domain (the front page as built, the feed's type, the first two
 bytes of an episode as a 206, a micro.blog redirect, an episode without `.html`, the slash form, a 404).
 Tinylytics refuses the `cloudfront.net` host, so analytics only count on the real domain.
+
+**IndexNow** (`scripts/indexnow.mjs`, 2026-10-28, part of the Search Console and Bing Webmaster
+cleanup, ported from Weekly Thing's): after the read-back passes, the deploy POSTs to `api.indexnow.org`
+the `.html` pages whose bytes changed (by MD5, even under `--all`) that the built `sitemap.xml` lists, so
+assets, audio, Pagefind, feeds, transcripts, llms.txt, the micro.blog redirect stubs and the 404 page are
+never sent. Nothing changed, nothing sent; a failed ping only warns and never fails the deploy. The key
+is public by design and shared with Jamie's other sites; `static/<key>.txt` (outside `src/`, where
+`.txt` is a template format) is copied to `/<key>.txt`, its body exactly the key.
+`node scripts/indexnow.mjs <built file keys>` prints what would be sent and sends nothing; never send a
+ping by hand.

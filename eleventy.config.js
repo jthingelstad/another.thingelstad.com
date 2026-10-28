@@ -31,6 +31,10 @@ export default function (eleventyConfig) {
   // Static assets
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy({ uploads: "uploads" });
+  // The IndexNow key file (scripts/indexnow.mjs), its body exactly the key, at /<key>.txt. It sits
+  // outside src/ because .txt is a template format there; a passthrough copy is in no collection, so it
+  // stays out of the sitemap, the feeds and llms.txt, and Pagefind indexes only HTML.
+  eleventyConfig.addPassthroughCopy({ "static/79f379d18599eeec9bebf34c9a2a5deb.txt": "79f379d18599eeec9bebf34c9a2a5deb.txt" });
 
   // Let Eleventy treat .txt templates (robots.txt) as pass-through templates
   // so the frontmatter-driven permalink is honored without a template engine.

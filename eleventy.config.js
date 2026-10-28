@@ -61,6 +61,25 @@ export default function (eleventyConfig) {
     return toDateTime(value).toISO();
   });
 
+  // The newest of several dates as a UTC instant, for a sitemap <lastmod>.
+  // Arrays are flattened and blanks skipped; "" when none is a date.
+  eleventyConfig.addFilter("latestDate", (...values) => {
+    const times = values
+      .flat(Infinity)
+      .filter(Boolean)
+      .map((value) => new Date(value).getTime())
+      .filter((time) => !Number.isNaN(time));
+    return times.length ? new Date(Math.max(...times)).toISOString() : "";
+  });
+
+  // The newest change among the episodes a listing shows: each one's date or
+  // the last commit to its notes or transcript (edited.episodes, by id). A
+  // listing renders every episode's title and summary, so an edit to any of
+  // them changes the page.
+  eleventyConfig.addFilter("episodesLatestDate", (episodes, editedEpisodes = {}) =>
+    eleventyConfig.getFilter("latestDate")((episodes || []).map((episode) => [episode.publishDate, editedEpisodes[episode.id]])),
+  );
+
   eleventyConfig.addFilter("rfc822Date", (value) => {
     return toDateTime(value).toFormat("EEE, dd LLL yyyy HH:mm:ss 'GMT'");
   });

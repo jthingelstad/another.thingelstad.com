@@ -57,10 +57,18 @@ npm run clean       # rm -rf _site
 
 ESM project (`"type": "module"` in `package.json`). Use `import`, not `require`.
 
+The sitemap gives every url a `<lastmod>` saying when what the page shows last changed (2026-10-28),
+never the build time: an episode's date or the last commit to its notes or transcript; a hand-written
+page's last source commit (`lib/edited.js` lists the sources, layouts and CSS left out) or, for the
+home page and `/archive/`, the newest change among the episodes they show (six and all). The build job checks out full history for it.
+`test/sitemap.test.js` fails on a url without a valid one. Eleventy reads a `_data` module with named
+exports as its namespace, so `src/_data/edited.js` only re-exports `lib/edited.js`'s default.
+
 ## Custom filters (defined in `eleventy.config.js`)
 
 - `readableDate(fmt?)` — luxon, default `"LLLL d, yyyy"`
-- `isoDate`, `rfc822Date` — luxon-formatted for sitemap and RSS
+- `isoDate`, `rfc822Date` — luxon-formatted for RSS
+- `latestDate` — the newest of several dates as a UTC instant, for the sitemap's `<lastmod>`
 - `hms` — `H:MM:SS` / `MM:SS` from seconds (the player's total time)
 - `hmsLong` — always `HH:MM:SS` from seconds (RSS `itunes:duration` in `podcast.xml.njk`)
 - `friendlyDuration` — `"11 min"` / `"1 hr 15 min"` from seconds

@@ -4,7 +4,7 @@
 //
 //   certificate  the another.thingelstad.com certificate, validated by a CNAME at Namecheap
 //   site         the site and audio buckets, the distribution, its function and redirect store,
-//                headers, 5xx alarm
+//                headers, 5xx alarm, access logs
 //   delivery     the role GitHub Actions assumes to publish a build (scripts/deploy-aws.mjs)
 //
 // The episode audio is not in the build. It lives in its own bucket, written once per episode by WT
@@ -242,6 +242,47 @@ export const site = template(
         ComparisonOperator: 'GreaterThanThreshold',
         TreatMissingData: 'notBreaching',
         AlarmActions: [alarmTopic]
+      }
+    },
+    // Access logs, the same shape as the other sites' (/weekly/web-access and its siblings): CloudFront's
+    // standard logging into CloudWatch Logs, kept 24 months (731 days), with no client IP and no query string.
+    AccessLogGroup: {
+      Type: 'AWS::Logs::LogGroup',
+      Properties: { LogGroupName: '/another/web-access', RetentionInDays: 731 }
+    },
+    AccessLogSource: {
+      Type: 'AWS::Logs::DeliverySource',
+      Properties: {
+        Name: 'another-web-access',
+        LogType: 'ACCESS_LOGS',
+        ResourceArn: sub('arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribution}')
+      }
+    },
+    AccessLogDestination: {
+      Type: 'AWS::Logs::DeliveryDestination',
+      Properties: {
+        Name: 'another-web-access',
+        DestinationResourceArn: get('AccessLogGroup', 'Arn'),
+        OutputFormat: 'json'
+      }
+    },
+    AccessLogDelivery: {
+      Type: 'AWS::Logs::Delivery',
+      DependsOn: 'AccessLogSource',
+      Properties: {
+        DeliverySourceName: 'another-web-access',
+        DeliveryDestinationArn: get('AccessLogDestination', 'Arn'),
+        RecordFields: [
+          'timestamp(ms)',
+          'cs-method',
+          'cs-uri-stem',
+          'sc-status',
+          'sc-bytes',
+          'sc-range-start',
+          'sc-range-end',
+          'cs(User-Agent)',
+          'x-edge-result-type'
+        ]
       }
     }
   },

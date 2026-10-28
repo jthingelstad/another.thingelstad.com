@@ -61,6 +61,17 @@ export default function (eleventyConfig) {
     return toDateTime(value).toISO();
   });
 
+  // The newest of several dates as a UTC instant, for a sitemap <lastmod>.
+  // Arrays are flattened and blanks skipped; "" when none is a date.
+  eleventyConfig.addFilter("latestDate", (...values) => {
+    const times = values
+      .flat(Infinity)
+      .filter(Boolean)
+      .map((value) => new Date(value).getTime())
+      .filter((time) => !Number.isNaN(time));
+    return times.length ? new Date(Math.max(...times)).toISOString() : "";
+  });
+
   eleventyConfig.addFilter("rfc822Date", (value) => {
     return toDateTime(value).toFormat("EEE, dd LLL yyyy HH:mm:ss 'GMT'");
   });

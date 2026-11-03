@@ -307,6 +307,13 @@ the result back through the CloudFront domain (the front page as built, the feed
 bytes of an episode as a 206, a micro.blog redirect, an episode without `.html`, the slash form, a 404).
 Tinylytics refuses the `cloudfront.net` host, so analytics only count on the real domain.
 
+**Tinylytics** (2026-11-02): `layouts/base.njk` loads the one script every site uses,
+`<script defer src="https://tinylytics.app/js/script.js" data-site="dU_bEtHmyUV_xnbDz6zH">`, with no
+query. Kudos, countries and events are set in the site's Tinylytics settings, not the URL; the
+`.tinylytics_kudos`, `.tinylytics_countries` and `data-tinylytics-event` markup is unchanged. Each tag
+sends its own page view, so a page carries exactly one and never the old `/embed/<id>.js` form;
+`test/tinylytics.test.js` pins both.
+
 **IndexNow** (`scripts/indexnow.mjs`, 2026-10-28, part of the Search Console and Bing Webmaster
 cleanup, ported from Weekly Thing's): after the read-back passes, the deploy POSTs to `api.indexnow.org`
 the `.html` pages whose bytes changed (by MD5, even under `--all`) that the built `sitemap.xml` lists, so

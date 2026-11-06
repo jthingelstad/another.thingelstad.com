@@ -304,6 +304,7 @@ uploads the files whose MD5 changed (`--all` re-uploads everything, needed after
 change), syncs the redirect store, deletes what the build no longer writes, clears the cache, and reads
 the result back through the CloudFront domain (the front page as built, the feed's type, the first two
 bytes of an episode as a 206, a micro.blog redirect, an episode without `.html`, the slash form, a 404).
+The redirect store is read and written only when `_redirects.json` differs from the record of the last finished sync (`scripts/redirect-record.mjs`, at `_deploy/redirects-synced` in the bucket, unreachable through the distribution); `npm run deploy:aws -- --sync-redirects` forces a full sync, which is what corrects a hand edit to the store.
 Tinylytics refuses the `cloudfront.net` host, so analytics only count on the real domain.
 
 **Tinylytics** (2026-11-02): `layouts/base.njk` loads the one script every site uses,

@@ -123,7 +123,7 @@ test("All Things takes the strip's ink link style, and on phones the list scroll
 
   const phone = css.match(/@media \(max-width: 40rem\) \{\s*\.sites-strip__inner[\s\S]*?\n\}/)?.[0] ?? "";
   assert.ok(phone, "no phone strip rule");
-  const rule = (selector) => phone.match(new RegExp(`${selector.replace(/[.]/g, "\\.")} \\{([^}]*)\\}`))?.[1] ?? "";
+  const rule = (selector) => phone.match(new RegExp(`${selector.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")} \\{([^}]*)\\}`))?.[1] ?? "";
   assert.doesNotMatch(rule(".sites-strip__inner"), /overflow/, "the inner row no longer scrolls");
   assert.match(rule(".sites-strip__inner"), /white-space: nowrap/);
   const list = rule(".sites-strip__list");

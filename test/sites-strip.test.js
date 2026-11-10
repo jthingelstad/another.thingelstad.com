@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import test from "node:test";
 import Eleventy from "@11ty/eleventy";
+import { checkStripAll } from "../scripts/sync-sites.mjs";
 
 // The sites strip is a shared contract across Jamie's sites
 // (thingelstad.com/AGENTS.md, "The sites strip"). These tests build the site
@@ -79,6 +80,58 @@ test("the strip links the in_sites_strip sites in file order and marks Another T
       }
     }
   }
+});
+
+// All Things (strip_all) ends the strip on every site: after the list and
+// outside it, with this site's ref, and never marked current here.
+function allOf(strip) {
+  const match = strip.match(/<\/ul>\s*<a class="sites-strip__all" ([^>]*)>([^<]*)<\/a>\s*<\/div>\s*<\/nav>$/);
+  assert.ok(match, "All Things does not follow the list at the end of the strip");
+  const [, attrs, text] = match;
+  return { href: attrs.match(/href="([^"]*)"/)?.[1], title: attrs.match(/title="([^"]*)"/)?.[1], attrs, text };
+}
+
+test("All Things ends the strip on every page, after the list, with this site's ref", () => {
+  assert.equal(vendored.strip_all.label, "All Things");
+  for (const page of pages) {
+    const strip = stripOf(page.content);
+    const all = allOf(strip);
+    assert.equal(all.href, "https://thingelstad.xyz/all/?ref=sites-strip-another", `${page.url}: All Things href`);
+    assert.equal(all.text, vendored.strip_all.label);
+    assert.equal(all.title, vendored.strip_all.description.replace(/'/g, "&#39;"));
+    assert.doesNotMatch(all.attrs, /aria-current/, `${page.url}: All Things is never current here`);
+    assert.equal((strip.match(/<a /g) ?? []).length, stripSites.length + 1, `${page.url}: strip links`);
+  }
+});
+
+test("sites.json must carry strip_all with a label, a description and an HTTPS url", () => {
+  checkStripAll(vendored.strip_all);
+  assert.throws(() => checkStripAll(undefined), /has no strip_all/);
+  for (const field of ["label", "url", "description"]) {
+    assert.throws(() => checkStripAll({ ...vendored.strip_all, [field]: "" }), new RegExp(`strip_all has no ${field}`));
+  }
+  assert.throws(() => checkStripAll({ ...vendored.strip_all, url: "http://thingelstad.xyz/all/" }), /must be HTTPS/);
+});
+
+test("All Things takes the strip's ink link style, and on phones the list scrolls beside it", async () => {
+  const css = await readFile(new URL("../src/assets/css/main.css", import.meta.url), "utf8");
+  // .sites-strip a gives every strip link the ink, weight, underline and focus ring; nothing overrides it for All Things.
+  assert.match(css, /\.sites-strip a \{[^}]*color: var\(--strip-ink\);[^}]*\}/);
+  assert.match(css, /\.sites-strip a:focus-visible \{[^}]*outline: 2px solid var\(--strip-ink\);[^}]*outline-offset: 3px;/);
+  const allRules = [...css.matchAll(/([^{}]*\.sites-strip__all[^{}]*)\{([^}]*)\}/g)];
+  for (const [, , body] of allRules) assert.doesNotMatch(body, /color|text-decoration/, "All Things keeps the strip link values");
+
+  const phone = css.match(/@media \(max-width: 40rem\) \{\s*\.sites-strip__inner[\s\S]*?\n\}/)?.[0] ?? "";
+  assert.ok(phone, "no phone strip rule");
+  const rule = (selector) => phone.match(new RegExp(`${selector.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")} \\{([^}]*)\\}`))?.[1] ?? "";
+  assert.doesNotMatch(rule(".sites-strip__inner"), /overflow/, "the inner row no longer scrolls");
+  assert.match(rule(".sites-strip__inner"), /white-space: nowrap/);
+  const list = rule(".sites-strip__list");
+  for (const decl of ["flex: 1 1 auto", "min-width: 0", "margin: -6px", "padding: 6px", "overflow-x: auto"]) {
+    assert.ok(list.includes(`${decl};`), `phone list: ${decl}`);
+  }
+  assert.match(rule(".sites-strip__all"), /flex: none/);
+  assert.match(rule(".sites-strip__label"), /display: none/);
 });
 
 test("vendored sites.json matches the shared copy", async (t) => {

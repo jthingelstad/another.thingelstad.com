@@ -132,6 +132,10 @@ It renders at build time from `src/_data/sites.json`: sites with
 included, reads as its `strip_label` ("Podcast" here too), so the wording
 matches every other site; every link carries `?ref=sites-strip-another` so
 Tinylytics' Sources report on the destination shows the visits this strip sent.
+After the list, outside it, the strip ends with All Things (`strip_all` in
+`sites.json`, to thingelstad.xyz/all/, `?ref=sites-strip-another`, never
+current here); on phones the list scrolls sideways and All Things stays at the
+row's right end. `scripts/sync-sites.mjs` refuses a `sites.json` without it.
 `test/sites-strip.test.js` builds the site in memory and pins the links and the
 current marker, and compares the vendored file with `../shared/sites.json` when
 that sibling is checked out (CI checks out only this repo, so there it is

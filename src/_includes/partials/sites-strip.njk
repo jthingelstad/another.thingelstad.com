@@ -6,7 +6,9 @@
     on every site; the current site differs only in its class and
     aria-current. Every link carries ?ref=sites-strip-<this site> so
     Tinylytics' Sources report on the destination shows the visits this
-    strip sent. -#}
+    strip sent. All Things (strip_all in sites.json) ends the strip, after
+    the list and outside it: no site, so no id, mark or aria-current here
+    (only thingelstad.xyz/all/ marks it current), with the same ref. -#}
 <nav class="sites-strip" aria-label="Jamie Thingelstad">
   <div class="sites-strip__inner">
     <span class="sites-strip__label">Jamie Thingelstad</span>
@@ -18,5 +20,6 @@
       </li>
       {%- endif %}{% endfor %}
     </ul>
+    <a class="sites-strip__all" href="{{ sites.strip_all.url | escape }}?ref=sites-strip-{{ site.id | escape }}" title="{{ sites.strip_all.description | escape }}">{{ sites.strip_all.label | escape }}</a>
   </div>
 </nav>

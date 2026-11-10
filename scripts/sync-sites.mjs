@@ -33,11 +33,23 @@ async function sharedTypeFiles(sharedDir) {
   ];
 }
 
+// strip_all is the All Things link that ends the strip on every site
+// (src/_includes/partials/sites-strip.njk): it needs a label, a description
+// and an HTTPS url.
+export function checkStripAll(all, source = "sites.json") {
+  if (!all || typeof all !== "object") throw new Error(`${source} has no strip_all.`);
+  for (const field of ["label", "url", "description"]) {
+    if (typeof all[field] !== "string" || !all[field]) throw new Error(`${source}: strip_all has no ${field}.`);
+  }
+  if (!all.url.startsWith("https://")) throw new Error(`${source}: strip_all's url must be HTTPS.`);
+}
+
 async function syncSites({ check = false } = {}) {
   const source = resolve(repoRoot, process.env.SITES_SOURCE || siblingSource);
   const content = await readFile(source, "utf8");
   const data = JSON.parse(content);
   if (!Array.isArray(data.sites) || data.sites.length === 0) throw new Error(`${source} has no sites list.`);
+  checkStripAll(data.strip_all, source);
 
   const typeFiles = await sharedTypeFiles(dirname(source));
 
@@ -66,7 +78,10 @@ async function syncSites({ check = false } = {}) {
   process.stdout.write(`Synced ${data.sites.length} sites and ${typeFiles.length} shared type files from ${dirname(source)}.\n`);
 }
 
-syncSites({ check: process.argv.includes("--check") }).catch((error) => {
-  console.error(error.message);
-  process.exitCode = 1;
-});
+// Run only as a script, so the test can import checkStripAll.
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  syncSites({ check: process.argv.includes("--check") }).catch((error) => {
+    console.error(error.message);
+    process.exitCode = 1;
+  });
+}

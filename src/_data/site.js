@@ -25,11 +25,11 @@ export default {
   subscribe: [
     {
       name: "Apple Podcasts",
-      url: "https://podcasts.apple.com/us/podcast/another-thing/id1849923890",
+      url: "https://podcasts.apple.com/us/podcast/another-thing/id1844244418",
     },
     {
       name: "Spotify",
-      url: "https://open.spotify.com/show/4xWUS5KWelgIkKJoogERDL",
+      url: "https://open.spotify.com/show/7FJA3cHPujeBoQV8WSoPdB",
     },
     {
       name: "Overcast",
@@ -37,7 +37,7 @@ export default {
     },
     {
       name: "Pocket Casts",
-      url: "https://pca.st/itunes/1849923890",
+      url: "https://pocketcasts.com/podcast/another-thing/3d748f00-8562-013e-dd82-02e76e4f8b0f",
     },
     {
       name: "RSS",
